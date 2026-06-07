@@ -73,7 +73,21 @@
     }
     .chip-t.active { background: var(--yellow); }
 
-    .footer-note { text-align: center; color: #fff; opacity: 0.8; font-size: 0.72rem; margin: 14px 0 12px; font-weight: 600; }
+    .footer-heart { text-align: center; margin: 16px 0 14px; }
+    .heart-btn {
+      border: none; background: transparent; cursor: pointer;
+      font-size: 1.8rem; line-height: 1; padding: 6px; border-radius: 50%;
+      touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+      transition: transform 0.08s ease; filter: drop-shadow(0 2px 0 rgba(0,0,0,0.15));
+    }
+    .heart-btn:active { transform: scale(0.85); }
+    .heart-btn.pop { animation: heart-pop 0.5s ease; }
+    @keyframes heart-pop {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.45) rotate(-8deg); }
+      55% { transform: scale(0.92) rotate(6deg); }
+      100% { transform: scale(1) rotate(0); }
+    }
   </style>
 </head>
 <body>
@@ -128,9 +142,12 @@
     </div>
     <div class="themebar" id="themebar"></div>
 
-    <p class="footer-note">Hecho con 💜 para chicos curiosos</p>
+    <div class="footer-heart">
+      <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
+    </div>
   </main>
 
+  <script src="js/sound.js"></script>
   <script src="js/words.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/progress.js"></script>
@@ -171,6 +188,16 @@
       );
     }
     renderChips();
+
+    // Corazón del footer: ruidito tierno + rebote al tocarlo
+    const heart = document.getElementById("heart");
+    heart.addEventListener("click", () => {
+      Sound.unlock();
+      Sound.cute();
+      heart.classList.remove("pop");
+      void heart.offsetWidth; // reinicia la animación si se toca rápido
+      heart.classList.add("pop");
+    });
   </script>
 </body>
 </html>

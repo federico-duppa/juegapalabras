@@ -85,6 +85,16 @@ const Sound = (() => {
       });
     },
 
+    // Ruidito tierno (corazón del footer): chispita juguetona ascendente
+    cute() {
+      play(() => {
+        note(N.E5, 0.0, 0.1, { type: "triangle", gain: 0.2 });
+        note(N.A5, 0.07, 0.1, { type: "triangle", gain: 0.2 });
+        note(N.C6, 0.14, 0.18, { type: "triangle", gain: 0.22 });
+        note(N.E5, 0.0, 0.28, { type: "sine", gain: 0.06 });
+      });
+    },
+
     // Subir de nivel / racha: fanfarria un poco más larga
     levelUp() {
       play(() => {
