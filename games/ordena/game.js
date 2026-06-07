@@ -315,6 +315,7 @@ function init() {
   Progress.load();
   Progress.touchDaily();
   Analytics.track("game_open", { game: "ordena" });
+  Speech.announce("Ordena las letras", !Sound.isMuted()); // dice qué hacer al entrar
   setupMute();
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);

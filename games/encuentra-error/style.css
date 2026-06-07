@@ -1,0 +1,117 @@
+/* ===== Encuentra el Error ===== */
+.game { flex: 1; display: flex; flex-direction: column; }
+
+.stats { display: flex; gap: 10px; justify-content: center; margin: 4px 0 6px; }
+.chip {
+  background: rgba(255,255,255,0.9);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  font-size: 0.95rem;
+}
+
+.clue { text-align: center; margin: 6px 0 2px; }
+.clue .emoji {
+  font-size: 5.2rem; line-height: 1.1;
+  filter: drop-shadow(0 6px 0 rgba(0,0,0,0.15));
+  animation: pop 0.4s ease;
+}
+.clue .cat {
+  display: inline-block; margin-top: 2px;
+  color: #fff; font-weight: 700; font-size: 0.8rem;
+  background: rgba(0,0,0,0.18); padding: 3px 12px; border-radius: 999px;
+}
+
+.hint-line {
+  text-align: center; color: #fff; font-weight: 800; font-size: 0.92rem;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.15); margin: 8px 0 0;
+}
+
+/* Palabra con UN error: cada letra es una ficha tocable que gira al acertar. */
+.word {
+  display: flex; flex-wrap: nowrap; gap: clamp(4px, 1.5vw, 10px);
+  justify-content: center; align-items: stretch; margin: 14px 0 6px; min-height: 0;
+}
+.tile {
+  flex: 1 1 0; min-width: 0; max-width: 64px;
+  height: clamp(58px, 13dvh, 86px);
+  background: transparent; border: none; padding: 0;
+  cursor: pointer; touch-action: manipulation;
+  perspective: 600px;
+  transition: transform 0.07s ease;
+}
+.tile:active:not(:disabled) { transform: scale(0.93); }
+.tile .inner {
+  display: block; position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+.tile.flipped .inner { transform: rotateY(180deg); }
+.tile .face {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  border-radius: 14px;
+  font-size: clamp(1.3rem, 7vw, 2.5rem); font-weight: 800; color: var(--ink);
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: var(--shadow);
+}
+.tile .front { background: rgba(255,255,255,0.97); border: 3px solid transparent; }
+.tile .back {
+  background: var(--green); color: #053d2c; border: 3px solid #04b083;
+  transform: rotateY(180deg);
+}
+/* Letra marcada como "esta está bien" (toque equivocado o pista). */
+.tile.ok .front {
+  background: #dcefe0; color: #4f8f63; opacity: 0.7;
+  border-color: #b6e0c2;
+}
+.tile.pressed .front { background: #d9ecff; }
+
+.message {
+  text-align: center; min-height: 24px;
+  color: #fff; font-weight: 800; font-size: 1.05rem;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.15); margin: 6px 0 2px;
+}
+
+.actions { display: flex; gap: 10px; justify-content: center; margin: 10px 0; }
+.actions .btn { padding: 12px 20px; font-size: 0.95rem; }
+
+/* Overlay de festejo (mismo estilo que los otros juegos) */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(43, 35, 80, 0.55);
+  backdrop-filter: blur(3px);
+  display: none; place-items: center; z-index: 50; padding: 24px;
+}
+.overlay.show { display: grid; }
+.celebrate {
+  background: #fff; border-radius: 28px; padding: 26px 24px;
+  text-align: center; box-shadow: 0 10px 0 rgba(0,0,0,0.18);
+  animation: pop 0.35s ease; max-width: 360px; width: 100%;
+}
+.celebrate .big-emoji { font-size: 4.4rem; }
+.celebrate .word {
+  font-size: 2rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--ink); margin: 6px 0; flex-wrap: wrap;
+}
+.celebrate .praise { font-size: 1.3rem; font-weight: 800; color: var(--pink); margin: 0 0 6px; }
+.celebrate .btn { width: 100%; font-size: 1.2rem; }
+
+@keyframes pop {
+  0% { transform: scale(0.6); }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* ===== Encaje en la pantalla visible (PWA): sin scroll ===== */
+html, body { height: 100dvh; overflow: hidden; }
+.app {
+  min-height: 0; overflow: auto;
+  padding-bottom: max(env(safe-area-inset-bottom), 20px);
+}
+.game { min-height: 0; }
+.topbar { padding: 6px 0; }
+.stats { margin: 2px 0 4px; }
+.clue { margin: 4px 0 0; }
+.clue .emoji { font-size: clamp(2.6rem, 12dvh, 5.2rem); }

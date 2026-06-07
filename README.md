@@ -32,6 +32,7 @@ Después abrí en el celular (misma red) o en el navegador:
 | 🔀 Ordena las Letras | ✅ Listo | Ortografía (tocar las letras de la palabra en orden, en posición QWERTY) |
 | 🎯 Letra Perdida | ✅ Listo | Ortografía (elegir la letra que falta entre 4 opciones) |
 | 🔤 Memoria de Palabras | ✅ Listo | Lectura + asociación; tablero que crece 2×2→3×5, con 🎁 cofre sorpresa al centro |
+| 🔍 Encuentra el Error | ✅ Listo | Ortografía/fonética: la palabra tiene una letra mal (b/v, s/z/c, g/j…); toca la equivocada y se da vuelta mostrando la correcta |
 
 **134 palabras en 12 categorías**: animales, comida, naturaleza, transporte, cuerpo,
 colores, ropa, casa, profesiones, deportes, instrumentos y cosas.
@@ -56,6 +57,9 @@ los juegos hacen fallback a todas.
 - **Racha diaria 🔥**: jugar días seguidos suma; se ve en el hub.
 - **Mascota Búho 🦉**: saluda en el hub con mensajes según el progreso.
 - **Voz al acertar**: lee la palabra en voz alta (Web Speech API). Respeta 🔇.
+- **Anuncio al entrar a un juego**: una voz dice qué hacer ("Adivina la palabra",
+  "Encuentra el error"…). Si el navegador bloquea el audio sin gesto, lo dice al
+  primer toque.
 - **Mensajes alentadores hablados**: cada 4–7 festejos, una voz dice algo lindo
   ("¡Muy bueno!", "¡Excelente!", "¡Seguí así!"). El conteo es compartido entre juegos.
 - **Continuar la partida**: cada juego guarda su sesión (`jp_sess_<juego>`). Si el

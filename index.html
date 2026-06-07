@@ -76,6 +76,9 @@
     .game-card.c2 .emoji { background: var(--pink); }
     .game-card.c3 .emoji { background: var(--purple); }
     .game-card.c4 .emoji { background: var(--green); }
+    .game-card.c5 .emoji { background: var(--yellow); }
+    /* 5º juego: solo en la última fila, centrado con ancho de una columna. */
+    .game-card.solo { grid-column: 1 / -1; justify-self: center; width: calc(50% - 7px); }
     .game-card h2 { margin: 2px 0 0; font-size: 1rem; line-height: 1.1; }
     .game-card p { margin: 0; font-size: 0.72rem; opacity: 0.7; font-weight: 600; line-height: 1.15; }
 
@@ -230,6 +233,11 @@
         <span class="emoji">🔤</span>
         <h2>Memoria</h2>
         <p>Une emoji y palabra</p>
+      </a>
+      <a class="game-card c5 solo" href="games/encuentra-error/index.html">
+        <span class="emoji">🔍</span>
+        <h2>Encuentra el Error</h2>
+        <p>Toca la letra equivocada</p>
       </a>
     </nav>
 

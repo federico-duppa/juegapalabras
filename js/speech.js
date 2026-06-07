@@ -41,15 +41,36 @@ const Speech = (() => {
       if (!synth || !enabled) return;
       try { speak(text); } catch (e) { /* sin voz: no pasa nada */ }
     },
+
+    // Anuncio al ENTRAR a un juego ("Adivina la palabra", "Encuentra el error"...).
+    // El audio en celulares suele necesitar un gesto: si al cargar la página queda
+    // bloqueado, lo decimos en el primer toque del usuario (una sola vez).
+    announce(text, enabled = true) {
+      if (!synth || !enabled) return;
+      let started = false;
+      try {
+        synth.cancel();
+        const u = makeUtter(text);
+        u.onstart = () => { started = true; };
+        synth.speak(u);
+      } catch (e) { /* nada */ }
+      const onGesture = () => {
+        if (!started && synth && !synth.speaking) {
+          try { synth.cancel(); synth.speak(makeUtter(text)); } catch (e) { /* nada */ }
+        }
+      };
+      try { document.addEventListener("pointerdown", onGesture, { once: true }); } catch (e) { /* nada */ }
+    },
   };
 
-  function speak(text) {
+  function makeUtter(text) {
     const u = new SpeechSynthesisUtterance(text);
     u.lang = (voice && voice.lang) || "es-ES";
     if (voice) u.voice = voice;
     u.rate = 0.9;   // un poquito lento, para chicos
     u.pitch = 1.1;  // tono alegre
     u.volume = 1;
-    synth.speak(u);
+    return u;
   }
+  function speak(text) { synth.speak(makeUtter(text)); }
 })();

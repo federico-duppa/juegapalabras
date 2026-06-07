@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#6a4cff" />
+  <meta name="description" content="Encuentra la letra equivocada de la palabra. Un juego de ortografía de JuegaPalabras." />
+  <link rel="icon" href="../../favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+  <link rel="manifest" href="../../manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="JuegaPalabras" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="JuegaPalabras 🎈" />
+  <meta property="og:description" content="Juegos para que chicos aprendan vocabulario y ortografía en español, jugando con emojis." />
+  <meta property="og:image" content="https://federico-duppa.github.io/juegapalabras/og-image.png" />
+  <meta property="og:url" content="https://federico-duppa.github.io/juegapalabras/games/encuentra-error/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://federico-duppa.github.io/juegapalabras/og-image.png" />
+  <script src="../../js/sw-register.js"></script>
+  <title>🔍 Encuentra el Error</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/main.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app game">
+    <header class="topbar">
+      <a class="btn-menu" href="../../index.html" aria-label="Volver al menú">🏠 Menú</a>
+      <h1>🔍 Encuentra el Error</h1>
+      <span class="spacer"></span>
+      <button class="icon-btn" id="mute" aria-label="Sonido">🔊</button>
+    </header>
+
+    <div class="stats">
+      <span class="chip" id="stars">⭐ 0</span>
+      <span class="chip" id="streak">🔥 0</span>
+    </div>
+
+    <div class="clue">
+      <div class="emoji" id="emoji">🔍</div>
+      <div class="cat" id="cat"></div>
+    </div>
+
+    <p class="hint-line">Toca la letra equivocada ✋</p>
+    <div class="word" id="word"></div>
+    <div class="message" id="message"></div>
+
+    <div class="actions">
+      <button class="btn btn-pink" id="hint-btn">💡 Pista</button>
+    </div>
+  </main>
+
+  <!-- Festejo -->
+  <div class="overlay" id="overlay">
+    <div class="celebrate">
+      <div class="big-emoji" id="ov-emoji">🎉</div>
+      <div class="word" id="ov-word"></div>
+      <div class="praise" id="ov-praise"></div>
+      <div class="bonus" id="ov-bonus"></div>
+      <button class="btn btn-primary" id="continue-btn">Siguiente ▶</button>
+    </div>
+  </div>
+
+  <script src="../../js/sound.js"></script>
+  <script src="../../js/confetti.js"></script>
+  <script src="../../js/speech.js"></script>
+  <script src="../../js/encourage.js"></script>
+  <script src="../../js/progress.js"></script>
+  <script src="../../js/words.js"></script>
+  <script src="../../js/analytics-config.js"></script>
+  <script src="../../js/analytics.js"></script>
+  <script src="../../js/theme.js"></script>
+  <script src="../../js/idle.js"></script>
+  <script src="../../js/adventure.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -295,6 +295,7 @@ function init() {
   Progress.load();
   Progress.touchDaily();
   Analytics.track("game_open", { game: "letra-perdida" });
+  Speech.announce("Encuentra la letra que falta", !Sound.isMuted()); // dice qué hacer al entrar
   setupMute();
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);

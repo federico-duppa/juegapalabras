@@ -384,6 +384,7 @@ function init() {
   Progress.load();
   Progress.touchDaily();
   Analytics.track("game_open", { game: "memoria" });
+  Speech.announce("Juego de memoria", !Sound.isMuted()); // dice qué hacer al entrar
   setupMute();
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);

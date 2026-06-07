@@ -338,6 +338,7 @@ function init() {
   Progress.load();
   Progress.touchDaily();
   Analytics.track("game_open", { game: "word-guesser" });
+  Speech.announce("Adivina la palabra", !Sound.isMuted()); // dice qué hacer al entrar
   buildKeyboard();
   setupMute();
   el("hint-btn").addEventListener("click", giveHint);
