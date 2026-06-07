@@ -132,16 +132,18 @@ html, body { height: 100dvh; overflow: hidden; }
 
 .topbar { padding: 6px 0; }
 .stats { margin: 2px 0 4px; }
-.clue { margin: 2px 0 0; }
-.clue .emoji { font-size: clamp(2.4rem, 9dvh, 5.2rem); }
+.clue { margin: 4px 0 0; }
+/* Piso de diseño 375x667: los clamps en dvh llegan a tamaño (casi) completo en ese alto
+   y solo se achican en pantallas más chicas. */
+.clue .emoji { font-size: clamp(2.6rem, 12dvh, 5.2rem); }
 /* Una sola fila que encoge con palabras largas (HELICÓPTERO): el largo de la palabra
    nunca agrega filas ni empuja el teclado fuera de la pantalla. */
-.word { margin: 8px 0 4px; min-height: 0; flex-wrap: nowrap; gap: clamp(3px, 1.2vw, 8px); }
+.word { margin: 10px 0 6px; min-height: 0; flex-wrap: nowrap; gap: clamp(3px, 1.2vw, 8px); }
 .tile {
-  flex: 1 1 0; width: auto; min-width: 0; max-width: 48px;
-  height: clamp(40px, 6.6dvh, 54px); font-size: clamp(0.85rem, 4.6vw, 1.7rem);
+  flex: 1 1 0; width: auto; min-width: 0; max-width: 50px;
+  height: clamp(44px, 8dvh, 54px); font-size: clamp(0.95rem, 4.8vw, 1.7rem);
 }
-.message { min-height: 22px; }
-.options { margin: 6px 0 4px; }
-.opt { height: clamp(44px, 7dvh, 60px); }
-.actions.keep-bottom { margin: 6px 0 0; }
+.message { min-height: 24px; }
+.options { margin: 8px 0 4px; }
+.opt { height: clamp(46px, 9dvh, 60px); }
+.actions.keep-bottom { margin: 8px 0 0; }
