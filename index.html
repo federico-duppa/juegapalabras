@@ -21,7 +21,7 @@
   <meta name="twitter:title" content="JuegaPalabras 🎈" />
   <meta name="twitter:description" content="Juegos para que chicos aprendan vocabulario y ortografía en español, jugando con emojis." />
   <meta name="twitter:image" content="https://federico-duppa.github.io/juegapalabras/og-image.png" />
-  <script>if ("serviceWorker" in navigator) { addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {})); }</script>
+  <script src="js/sw-register.js"></script>
   <title>JuegaPalabras 🎈</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
@@ -92,10 +92,26 @@
     .chip-t.active { background: var(--yellow); }
 
     .footer-heart { text-align: center; margin: 16px 0 14px; }
-    .privacy { margin-top: 8px; color: #fff; opacity: 0.72; font-size: 0.7rem; }
-    .privacy summary { cursor: pointer; font-weight: 700; list-style: none; }
-    .privacy summary::-webkit-details-marker { display: none; }
-    .privacy p { max-width: 330px; margin: 6px auto 0; line-height: 1.35; font-weight: 600; text-align: center; }
+    /* Privacidad: abre un popover centrado (en vez de revelar texto bajo el fold,
+       que obligaba a scrollear). */
+    .privacy-link {
+      display: inline-block; margin-top: 8px; border: none; background: transparent;
+      color: #fff; opacity: 0.72; font: inherit; font-weight: 700; font-size: 0.7rem;
+      text-decoration: underline; cursor: pointer; touch-action: manipulation;
+    }
+    .overlay {
+      position: fixed; inset: 0; background: rgba(43,35,80,0.55);
+      backdrop-filter: blur(3px); display: none; place-items: center; z-index: 50; padding: 24px;
+    }
+    .overlay.show { display: grid; }
+    .sheet {
+      background: #fff; color: var(--ink); border-radius: 24px;
+      padding: 22px 22px 18px; max-width: 340px; width: 100%; text-align: center;
+      box-shadow: 0 10px 0 rgba(0,0,0,0.18); animation: heart-pop 0.3s ease;
+    }
+    .sheet h3 { margin: 0 0 8px; font-size: 1.2rem; }
+    .sheet p { margin: 0 0 16px; font-size: 0.85rem; line-height: 1.4; font-weight: 600; }
+    .sheet .btn { width: 100%; }
     .heart-btn {
       border: none; background: transparent; cursor: pointer;
       font-size: 1.8rem; line-height: 1; padding: 6px; border-radius: 50%;
@@ -166,13 +182,18 @@
 
     <div class="footer-heart">
       <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
-      <details class="privacy">
-        <summary>Privacidad</summary>
-        <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
-           para saber qué juegos y categorías gustan más y mejorar el sitio.</p>
-      </details>
+      <div><button class="privacy-link" id="privacy-btn" aria-haspopup="dialog">Privacidad</button></div>
     </div>
   </main>
+
+  <div class="overlay" id="privacy-overlay" role="dialog" aria-modal="true" aria-label="Privacidad">
+    <div class="sheet">
+      <h3>🔒 Privacidad</h3>
+      <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
+         para saber qué juegos y categorías gustan más y mejorar el sitio.</p>
+      <button class="btn btn-primary" id="privacy-close">Entendido</button>
+    </div>
+  </div>
 
   <script src="js/sound.js"></script>
   <script src="js/words.js"></script>
@@ -233,6 +254,15 @@
       void heart.offsetWidth; // reinicia la animación si se toca rápido
       heart.classList.add("pop");
     });
+
+    // Privacidad: popover centrado (no scrollea la página)
+    const pvOverlay = document.getElementById("privacy-overlay");
+    const openPrivacy = () => pvOverlay.classList.add("show");
+    const closePrivacy = () => pvOverlay.classList.remove("show");
+    document.getElementById("privacy-btn").addEventListener("click", openPrivacy);
+    document.getElementById("privacy-close").addEventListener("click", closePrivacy);
+    pvOverlay.addEventListener("click", (e) => { if (e.target === pvOverlay) closePrivacy(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePrivacy(); });
   </script>
 </body>
 </html>

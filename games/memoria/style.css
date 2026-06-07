@@ -131,3 +131,28 @@
   70% { transform: scale(1.12); }
   100% { transform: scale(1); }
 }
+
+/* ===== Encaje en la pantalla visible (PWA): sin scroll, todas las cards a la vista =====
+   El tablero ocupa el alto sobrante y reparte filas iguales (grid-auto-rows:1fr), que
+   acotan el alto disponible para las cards (antes el aspect-ratio fijo se pasaba del
+   viewport en los niveles altos 3x5). overflow:auto en .app es red de seguridad. */
+html, body { height: 100dvh; overflow: hidden; }
+.app { min-height: 0; overflow: auto; }
+.game { min-height: 0; }
+
+.topbar { padding: 6px 0; }
+.board {
+  flex: 1;
+  min-height: 0;
+  grid-auto-rows: 1fr;       /* filas iguales que llenan el alto → garantiza el fit */
+  margin: 6px 0;
+}
+/* La carta mantiene su 4/3 cuando hay lugar (centrada en su celda); si la celda es más
+   chica (niveles altos en pantallas bajitas), max-height la achica para no desbordar. */
+.card {
+  aspect-ratio: 4 / 3;
+  width: 100%; height: auto;
+  max-height: 100%;
+  margin: auto;
+  min-height: 0;
+}
