@@ -68,7 +68,11 @@ Para entender qué juegos y contenidos gustan más (y decidir dónde sumar conte
 - Solo se cuentan **eventos anónimos** con dimensiones acotadas: qué juego se abre, qué
   categoría se resuelve, dificultad (uso de pista / errores / inactividad), retorno diario,
   niveles y medallas. El progreso del jugador (`localStorage` `jp_*`) **nunca** se transmite.
-- Respeta **Do Not Track** y **Global Privacy Control** (si están activos, no envía nada).
+- Por defecto **trackea siempre** (los datos son anónimos, así que no es obligatorio
+  honrar Do Not Track). Para respetar **Do Not Track / GPC**, poné
+  `respectDoNotTrack: true` en `js/analytics-config.js`.
+- Cada evento incluye la **versión** de la app (`APP_VERSION` en `js/analytics-config.js`,
+  visible también en el footer) para comparar métricas entre versiones.
 - Solo emite desde el sitio publicado (`allowedHost`); en local queda en no-op.
 - **Para desactivar todo:** dejá `scriptUrl`/`siteId` vacíos en `js/analytics-config.js`
   (con `debug: true` los eventos se muestran en consola y no se envían).

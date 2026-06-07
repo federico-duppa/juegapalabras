@@ -20,6 +20,13 @@ const Analytics = (() => {
     } catch (e) { return false; }
   }
 
+  function withMeta(props) {
+    try {
+      const v = (typeof APP_VERSION !== "undefined") ? APP_VERSION : undefined;
+      return v ? Object.assign({}, props || {}, { v }) : (props || {});
+    } catch (e) { return props || {}; }
+  }
+
   function send(name, props) {
     try { if (window.umami && window.umami.track) window.umami.track(name, props || {}); } catch (e) { /* swallow */ }
   }
@@ -43,7 +50,7 @@ const Analytics = (() => {
     init() {
       try {
         if (started) return; started = true;
-        if (privacyOptOut()) { mode = "off"; return; }
+        if (C.respectDoNotTrack !== false && privacyOptOut()) { mode = "off"; return; } // por defecto trackea siempre
         if (!C.provider || !C.scriptUrl || !C.siteId) { mode = "off"; return; }
         if (C.debug) { mode = "debug"; return; }                 // local: log, no envía
         if (location.hostname !== C.allowedHost) { mode = "off"; return; } // mata localhost
@@ -55,9 +62,10 @@ const Analytics = (() => {
     // Registra un evento. props = objeto plano de valores cortos.
     track(name, props) {
       try {
-        if (mode === "debug") { console.log("[analytics]", name, props || {}); return; }
+        const p = withMeta(props);
+        if (mode === "debug") { console.log("[analytics]", name, p); return; }
         if (mode !== "live" || failed) return;
-        if (ready) send(name, props); else queue.push([name, props]);
+        if (ready) send(name, p); else queue.push([name, p]);
       } catch (e) { /* swallow */ }
     },
 
