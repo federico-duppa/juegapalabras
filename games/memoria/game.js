@@ -1,16 +1,32 @@
 // ===== Memoria de Palabras — lógica =====
-// Tablero de cartas: la mitad son emojis y la mitad son palabras.
-// Hay que emparejar cada emoji con su palabra escrita. Practica lectura.
+// Tablero de cartas: mitad emojis, mitad palabras. Hay que emparejar cada emoji
+// con su palabra. El tablero crece por niveles (2x2 → 3x5). En el 3x5 (impar) la
+// carta del centro es un 🎁 cofre que se abre al completar la ronda y da premio.
 
-const PAIRS_PER_ROUND = 4; // 8 cartas por ronda
+// Niveles de tablero (crecen al completar rondas).
+const TIERS = [
+  { cols: 2, rows: 2 }, // 2 pares
+  { cols: 2, rows: 3 }, // 3 pares
+  { cols: 2, rows: 4 }, // 4 pares (lo clásico)
+  { cols: 3, rows: 4 }, // 6 pares
+  { cols: 3, rows: 5 }, // 7 pares + cofre central
+];
+const LVL_KEY = "jp_memoria_level";
 
-// Para que las palabras entren bien en la carta, usamos las no tan largas.
-// Respeta el tema elegido; si el tema tiene menos de 4 cortas, usa todas.
-function memoriaPool() {
-  const themed = Theme.words().filter((x) => Array.from(x.w).length <= 7);
-  if (themed.length >= PAIRS_PER_ROUND) return themed;
-  return WORDS.filter((x) => Array.from(x.w).length <= 7);
+function tierInfo(t) {
+  const cells = t.cols * t.rows;
+  const hasCenter = cells % 2 === 1;
+  return {
+    cols: t.cols, rows: t.rows, cells, hasCenter,
+    pairs: Math.floor(cells / 2),
+    centerIndex: hasCenter ? (cells - 1) / 2 : -1,
+  };
 }
+function getLevel() {
+  const n = parseInt(localStorage.getItem(LVL_KEY) || "0", 10) || 0;
+  return Math.max(0, Math.min(n, TIERS.length - 1));
+}
+function setLevel(n) { localStorage.setItem(LVL_KEY, String(Math.max(0, Math.min(n, TIERS.length - 1)))); }
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
@@ -20,12 +36,29 @@ function shuffle(a) {
   return a;
 }
 
+// Palabras cortas del tema (fallback a todas si el tema tiene menos de 4).
+function memoriaPool() {
+  const themed = Theme.words().filter((x) => Array.from(x.w).length <= 7);
+  if (themed.length >= 4) return themed;
+  return WORDS.filter((x) => Array.from(x.w).length <= 7);
+}
+
+// Tier efectivo: el nivel deseado, bajado hasta que haya suficientes palabras.
+function effectiveTier() {
+  const avail = memoriaPool().length;
+  let idx = getLevel();
+  while (idx > 0 && tierInfo(TIERS[idx]).pairs > avail) idx--;
+  return tierInfo(TIERS[idx]);
+}
+
 const State = {
-  cards: [],        // {word, type:'emoji'|'word', content, matched}
-  firstPick: null,  // índice de la primera carta dada vuelta
-  busy: false,      // bloquea toques mientras se resuelve un par
-  matched: 0,       // pares encontrados en la ronda
-  streak: 0,        // pares seguidos sin error
+  cards: [],
+  firstPick: null,
+  busy: false,
+  matched: 0,
+  pairsTarget: 0,
+  cols: 2, rows: 2, hasCenter: false, centerIndex: -1,
+  streak: 0,
   roundBonus: { leveledUp: false, level: null, medals: [] },
 };
 
@@ -36,50 +69,29 @@ function renderStats() {
   el("streak").textContent = "🔥 " + State.streak;
 }
 
-// ——— Sesión: guardar la ronda para continuar al volver ———
-const SKEY = "jp_sess_memoria";
-
-function saveSession() {
-  try {
-    localStorage.setItem(SKEY, JSON.stringify({
-      theme: Theme.get(),
-      cards: State.cards.map((c) => ({ word: c.word, type: c.type, content: c.content, matched: c.matched })),
-      streak: State.streak,
-      bonus: State.roundBonus,
-    }));
-  } catch (e) { /* sin storage */ }
-}
-
-function restoreSession() {
-  let s;
-  try { s = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) { return false; }
-  if (!s || !Array.isArray(s.cards) || s.cards.length === 0) return false;
-  if (s.theme !== Theme.get()) return false; // cambió el tema
-  if (s.cards.every((c) => c.matched)) return false; // ronda completa: empezar otra
-
-  State.cards = s.cards.map((c) => ({ word: c.word, type: c.type, content: c.content, matched: !!c.matched }));
-  State.firstPick = null;
-  State.busy = false;
-  State.matched = State.cards.filter((c) => c.matched).length / 2; // pares hallados
-  State.streak = s.streak || 0;
-  State.roundBonus = (s.bonus && typeof s.bonus === "object")
-    ? { leveledUp: !!s.bonus.leveledUp, level: s.bonus.level || null, medals: Array.isArray(s.bonus.medals) ? s.bonus.medals : [] }
-    : { leveledUp: false, level: null, medals: [] };
-  el("message").textContent = "";
-  renderBoard();
-  renderStats();
-  saveSession();
-  return true;
-}
-
 function newRound() {
-  const picks = shuffle(memoriaPool()).slice(0, PAIRS_PER_ROUND);
-  const cards = [];
+  const t = effectiveTier();
+  State.cols = t.cols; State.rows = t.rows;
+  State.hasCenter = t.hasCenter; State.centerIndex = t.centerIndex;
+  State.pairsTarget = t.pairs;
+
+  const picks = shuffle(memoriaPool()).slice(0, t.pairs);
+  const pairCards = [];
   picks.forEach((p) => {
-    cards.push({ word: p.w, type: "emoji", content: p.e, matched: false });
-    cards.push({ word: p.w, type: "word", content: p.w, matched: false });
+    pairCards.push({ word: p.w, type: "emoji", content: p.e, matched: false });
+    pairCards.push({ word: p.w, type: "word", content: p.w, matched: false });
   });
-  State.cards = shuffle(cards);
+  shuffle(pairCards);
+
+  // Armar el tablero; si hay centro, poner el cofre justo en el medio.
+  const cards = [];
+  let pi = 0;
+  for (let i = 0; i < t.cells; i++) {
+    if (t.hasCenter && i === t.centerIndex) cards.push({ type: "chest", content: "🎁", matched: false, opened: false });
+    else cards.push(pairCards[pi++]);
+  }
+
+  State.cards = cards;
   State.firstPick = null;
   State.busy = false;
   State.matched = 0;
@@ -92,11 +104,19 @@ function newRound() {
 
 function renderBoard() {
   const board = el("board");
+  board.style.gridTemplateColumns = `repeat(${State.cols}, 1fr)`;
   board.innerHTML = "";
   State.cards.forEach((c, idx) => {
+    if (c.type === "chest") {
+      const d = document.createElement("div");
+      d.className = "card chest" + (c.opened ? " opened" : "");
+      d.innerHTML = `<div class="chestface">${c.opened ? "🎉" : "🎁"}</div>`;
+      board.appendChild(d);
+      return;
+    }
     const card = document.createElement("button");
     card.className = "card" + (c.type === "word" ? " is-word" : "");
-    if (c.matched) card.classList.add("flipped", "matched"); // ya emparejada (al restaurar)
+    if (c.matched) card.classList.add("flipped", "matched");
     card.dataset.idx = idx;
     card.innerHTML = `
       <div class="inner">
@@ -108,15 +128,13 @@ function renderBoard() {
   });
 }
 
-function cardEl(idx) {
-  return el("board").children[idx];
-}
+function cardEl(idx) { return el("board").children[idx]; }
 
 function flip(idx) {
   if (State.busy) return;
   const c = State.cards[idx];
-  if (c.matched) return;
-  if (idx === State.firstPick) return; // ya está dada vuelta
+  if (!c || c.type === "chest" || c.matched) return;
+  if (idx === State.firstPick) return;
   Sound.unlock();
 
   cardEl(idx).classList.add("flipped");
@@ -127,14 +145,10 @@ function flip(idx) {
     return;
   }
 
-  // Segunda carta: comparar
   const a = State.cards[State.firstPick];
   const b = State.cards[idx];
-  if (a.word === b.word) {
-    matchPair(State.firstPick, idx);
-  } else {
-    missPair(State.firstPick, idx);
-  }
+  if (a.word === b.word) matchPair(State.firstPick, idx);
+  else missPair(State.firstPick, idx);
 }
 
 function matchPair(i, j) {
@@ -146,7 +160,6 @@ function matchPair(i, j) {
   State.matched += 1;
   State.streak += 1;
 
-  // Suma al progreso (sin overlay; guardamos novedades para el final de ronda)
   const res = Progress.solve("memoria", State.streak, State.cards[i].word);
   if (res.leveledUp) { State.roundBonus.leveledUp = true; State.roundBonus.level = res.level; }
   State.roundBonus.medals.push(...res.newMedals);
@@ -155,11 +168,10 @@ function matchPair(i, j) {
 
   Sound.correct();
   Speech.say(State.cards[i].word, !Sound.isMuted());
-  // confeti chiquito en la carta
   const r = cardEl(j).getBoundingClientRect();
   Confetti.burst(r.left + r.width / 2, r.top + r.height / 2);
 
-  if (State.matched === PAIRS_PER_ROUND) {
+  if (State.matched === State.pairsTarget) {
     State.busy = true;
     setTimeout(roundComplete, 650);
   }
@@ -182,13 +194,29 @@ function missPair(i, j) {
 }
 
 function roundComplete() {
+  let chestMsg = "";
+  // Abrir el cofre del centro (si lo hay) y dar premio.
+  if (State.hasCenter && State.centerIndex >= 0 && State.cards[State.centerIndex]) {
+    State.cards[State.centerIndex].opened = true;
+    renderBoard();
+    const bonus = 2 + Math.floor(Math.random() * 3); // 2 a 4 estrellas
+    const cres = Progress.addBonusStars(bonus);
+    if (cres.leveledUp) { State.roundBonus.leveledUp = true; State.roundBonus.level = cres.level; }
+    State.roundBonus.medals.push(...cres.newMedals);
+    chestMsg = `🎁 ¡Cofre abierto! +${bonus} ⭐`;
+    renderStats();
+  }
+
+  // Subir el nivel del tablero para la próxima ronda.
+  setLevel(getLevel() + 1);
+
   Confetti.burst();
   setTimeout(() => Confetti.burst(window.innerWidth * 0.3, window.innerHeight * 0.3), 220);
   Sound.levelUp();
 
-  el("ov-emoji").textContent = "🎉";
+  el("ov-emoji").textContent = State.hasCenter ? "🎁" : "🎉";
   el("ov-word").textContent = "¡Ronda completa!";
-  el("ov-praise").textContent = `Encontraste ${PAIRS_PER_ROUND} pares 🧠`;
+  el("ov-praise").textContent = chestMsg || `Encontraste ${State.pairsTarget} pares 🧠`;
   const parts = [];
   if (State.roundBonus.leveledUp)
     parts.push(`<div class="lvl-up">¡Subiste a ${State.roundBonus.level.emoji} ${State.roundBonus.level.name}!</div>`);
@@ -196,11 +224,59 @@ function roundComplete() {
     parts.push(`<div class="medal-win">${m.emoji} Nueva medalla: ${m.name}</div>`));
   el("ov-bonus").innerHTML = parts.join("");
   el("overlay").classList.add("show");
+  saveSession();
 }
 
 function continueGame() {
   el("overlay").classList.remove("show");
   newRound();
+}
+
+// ——— Sesión ———
+const SKEY = "jp_sess_memoria";
+
+function saveSession() {
+  try {
+    localStorage.setItem(SKEY, JSON.stringify({
+      theme: Theme.get(),
+      cols: State.cols, rows: State.rows, hasCenter: State.hasCenter,
+      centerIndex: State.centerIndex, pairsTarget: State.pairsTarget,
+      cards: State.cards.map((c) => c.type === "chest"
+        ? { type: "chest", content: c.content, matched: false, opened: !!c.opened }
+        : { word: c.word, type: c.type, content: c.content, matched: c.matched }),
+      streak: State.streak,
+      bonus: State.roundBonus,
+    }));
+  } catch (e) { /* sin storage */ }
+}
+
+function restoreSession() {
+  let s;
+  try { s = JSON.parse(localStorage.getItem(SKEY) || "null"); } catch (e) { return false; }
+  if (!s || !Array.isArray(s.cards) || s.cards.length === 0) return false;
+  if (s.theme !== Theme.get()) return false;
+  // Ronda terminada (todos los pares hechos): empezar una nueva.
+  const pairsDone = s.cards.filter((c) => c.type !== "chest").every((c) => c.matched);
+  if (pairsDone) return false;
+
+  State.cards = s.cards.map((c) => c.type === "chest"
+    ? { type: "chest", content: c.content || "🎁", matched: false, opened: !!c.opened }
+    : { word: c.word, type: c.type, content: c.content, matched: !!c.matched });
+  State.cols = s.cols || 2; State.rows = s.rows || 2;
+  State.hasCenter = !!s.hasCenter; State.centerIndex = typeof s.centerIndex === "number" ? s.centerIndex : -1;
+  State.pairsTarget = s.pairsTarget || State.cards.filter((c) => c.type !== "chest").length / 2;
+  State.firstPick = null;
+  State.busy = false;
+  State.matched = State.cards.filter((c) => c.type !== "chest" && c.matched).length / 2;
+  State.streak = s.streak || 0;
+  State.roundBonus = (s.bonus && typeof s.bonus === "object")
+    ? { leveledUp: !!s.bonus.leveledUp, level: s.bonus.level || null, medals: Array.isArray(s.bonus.medals) ? s.bonus.medals : [] }
+    : { leveledUp: false, level: null, medals: [] };
+  el("message").textContent = "";
+  renderBoard();
+  renderStats();
+  saveSession();
+  return true;
 }
 
 function setupMute() {

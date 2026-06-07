@@ -133,6 +133,16 @@ const Progress = (() => {
     medalsEarnedCount() { return data.medals.length; },
     medalsTotal() { return MEDALS.length; },
 
+    // Suma estrellas extra (p. ej. premio del cofre), sin palabra ni juego.
+    addBonusStars(n) {
+      const before = levelFor(data.stars).idx;
+      data.stars += n;
+      const after = levelFor(data.stars).idx;
+      const newMedals = checkMedals();
+      save();
+      return { leveledUp: after > before, level: levelFor(data.stars), newMedals };
+    },
+
     // Registra una palabra resuelta. Devuelve novedades para festejar.
     solve(game, currentStreak, word) {
       const before = levelFor(data.stars).idx;

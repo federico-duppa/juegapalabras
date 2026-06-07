@@ -21,11 +21,11 @@
   text-shadow: 0 2px 0 rgba(0,0,0,0.15); margin: 2px 0;
 }
 
-/* Tablero de cartas */
+/* Tablero de cartas (las columnas las define el juego según el nivel) */
 .board {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
   margin: 6px 0 10px;
 }
 .card {
@@ -66,10 +66,10 @@
   background: #fff;
   color: var(--ink);
 }
-/* Emoji grande; palabra que se achica para entrar */
-.card:not(.is-word) .face.front { font-size: 2.9rem; }
+/* Emoji grande; palabra que se achica para entrar (se adapta a 2 o 3 columnas) */
+.card:not(.is-word) .face.front { font-size: clamp(1.6rem, 8vw, 2.8rem); }
 .card.is-word .face.front {
-  font-size: clamp(0.95rem, 5.2vw, 1.5rem);
+  font-size: clamp(0.9rem, 5vw, 1.5rem);
   font-weight: 800;
   letter-spacing: 0.5px;
   text-align: center;
@@ -82,6 +82,22 @@
   animation: popin 0.3s ease;
 }
 .card.matched { cursor: default; }
+
+/* Carta central: cofre sorpresa (no es par) */
+.card.chest { cursor: default; }
+.card.chest .chestface {
+  width: 100%; height: 100%; border-radius: 18px;
+  display: grid; place-items: center;
+  font-size: clamp(1.7rem, 8.5vw, 2.8rem);
+  background: linear-gradient(160deg, var(--yellow), #ffb703);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.18);
+  animation: chestbob 1.6s ease-in-out infinite;
+}
+.card.chest.opened .chestface {
+  background: linear-gradient(160deg, var(--green), #06d6a0);
+  animation: popin 0.4s ease;
+}
+@keyframes chestbob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 
 @keyframes popin {
   0% { transform: scale(0.7); }

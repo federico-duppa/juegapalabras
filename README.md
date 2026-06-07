@@ -30,7 +30,7 @@ Después abrí en el celular (misma red) o en el navegador:
 | 🐶 ¡Adivina la Palabra! | ✅ Listo | Vocabulario + ortografía (escribir la palabra del emoji) |
 | 🔀 Ordena las Letras | ✅ Listo | Ortografía (tocar las letras de la palabra en orden, en posición QWERTY) |
 | 🎯 Letra Perdida | ✅ Listo | Ortografía (elegir la letra que falta entre 4 opciones) |
-| 🔤 Memoria de Palabras | ✅ Listo | Lectura + asociación (emparejar cada emoji con su palabra) |
+| 🔤 Memoria de Palabras | ✅ Listo | Lectura + asociación; tablero que crece 2×2→3×5, con 🎁 cofre sorpresa al centro |
 
 **134 palabras en 12 categorías**: animales, comida, naturaleza, transporte, cuerpo,
 colores, ropa, casa, profesiones, deportes, instrumentos y cosas.
