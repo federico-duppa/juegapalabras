@@ -145,7 +145,7 @@ html, body { height: 100dvh; overflow: hidden; }
   flex: 1;
   min-height: 0;
   grid-auto-rows: 1fr;       /* filas iguales que llenan el alto → garantiza el fit */
-  margin: 6px 0;
+  margin: 6px 0 16px;        /* respiro abajo para que las cards no queden pegadas al fondo */
 }
 /* La carta mantiene su 4/3 cuando hay lugar (centrada en su celda); si la celda es más
    chica (niveles altos en pantallas bajitas), max-height la achica para no desbordar. */
