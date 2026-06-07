@@ -127,7 +127,11 @@
    los elementos pesados (emoji, teclas) se achiquen con la altura disponible. overflow:auto
    en .app es solo red de seguridad para pantallas más chicas de lo previsto. */
 html, body { height: 100dvh; overflow: hidden; }
-.app { min-height: 0; overflow: auto; }
+.app {
+  min-height: 0; overflow: auto;
+  /* Colchón inferior garantizado (barra de nav de Android, ver nota en memoria). */
+  padding-bottom: max(env(safe-area-inset-bottom), 20px);
+}
 .game { min-height: 0; }
 
 .topbar { padding: 6px 0; }

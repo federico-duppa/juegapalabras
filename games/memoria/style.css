@@ -137,7 +137,12 @@
    acotan el alto disponible para las cards (antes el aspect-ratio fijo se pasaba del
    viewport en los niveles altos 3x5). overflow:auto en .app es red de seguridad. */
 html, body { height: 100dvh; overflow: hidden; }
-.app { min-height: 0; overflow: auto; }
+.app {
+  min-height: 0; overflow: auto;
+  /* Colchón inferior garantizado: en el PWA de Android la barra de nav (atrás/home) no
+     siempre reporta env(safe-area-inset-bottom) — con el max() siempre queda aire abajo. */
+  padding-bottom: max(env(safe-area-inset-bottom), 20px);
+}
 .game { min-height: 0; }
 
 .topbar { padding: 6px 0; }
@@ -145,7 +150,7 @@ html, body { height: 100dvh; overflow: hidden; }
   flex: 1;
   min-height: 0;
   grid-auto-rows: 1fr;       /* filas iguales que llenan el alto → garantiza el fit */
-  margin: 6px 0 16px;        /* respiro abajo para que las cards no queden pegadas al fondo */
+  margin: 6px 0 14px;        /* respiro extra arriba de la barra de Android */
 }
 /* La carta mantiene su 4/3 cuando hay lugar (centrada en su celda); si la celda es más
    chica (niveles altos en pantallas bajitas), max-height la achica para no desbordar. */

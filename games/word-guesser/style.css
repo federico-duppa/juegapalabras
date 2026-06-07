@@ -166,7 +166,11 @@
 /* ===== Encaje en la pantalla visible (PWA): sin scroll, teclado siempre a la vista =====
    Ver nota en letra-perdida/style.css. */
 html, body { height: 100dvh; overflow: hidden; }
-.app { min-height: 0; overflow: auto; }
+.app {
+  min-height: 0; overflow: auto;
+  /* Colchón inferior garantizado (barra de nav de Android, ver nota en memoria). */
+  padding-bottom: max(env(safe-area-inset-bottom), 20px);
+}
 .game { min-height: 0; }
 
 .topbar { padding: 6px 0; }
