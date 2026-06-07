@@ -151,6 +151,7 @@ function giveHint() {
   Sound.unlock();
   const idx = firstEmpty();
   if (idx === -1) return;
+  if (!State.sentHint) { State.sentHint = true; Analytics.track("hint_used", { game: "ordena" }); }
   State.letters[idx] = { ch: State.base[idx] };
   Sound.hint();
   renderSlots();
@@ -183,6 +184,7 @@ function win() {
 
 function lose() {
   Sound.wrong();
+  if (!State.sentWrong) { State.sentWrong = true; Analytics.track("wrong_attempt", { game: "ordena" }); }
   State.streak = 0;
   renderStats();
   renderSlots("shake");
@@ -270,6 +272,7 @@ function nextWord() {
   State.base = Array.from(norm(State.current.w));
   State.letters = State.base.map(() => null);
   State.solved = false;
+  State.sentHint = false; State.sentWrong = false; // anti-spam de analítica por palabra
   el("message").textContent = "";
   renderClue();
   buildKeyboard();
@@ -306,13 +309,15 @@ function setupMute() {
 }
 
 function init() {
+  Analytics.init();
   Progress.load();
   Progress.touchDaily();
+  Analytics.track("game_open", { game: "ordena" });
   setupMute();
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);
-  IdleHint.start(el("hint-btn"), 8000); // brilla la pista tras 8s sin tocar nada
+  IdleHint.start(el("hint-btn"), 8000, "ordena"); // brilla la pista tras 8s sin tocar nada
   if (!restoreSession()) {
     State.deck = buildDeck();
     State.i = 0;

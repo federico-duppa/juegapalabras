@@ -74,6 +74,10 @@
     .chip-t.active { background: var(--yellow); }
 
     .footer-heart { text-align: center; margin: 16px 0 14px; }
+    .privacy { margin-top: 8px; color: #fff; opacity: 0.72; font-size: 0.7rem; }
+    .privacy summary { cursor: pointer; font-weight: 700; list-style: none; }
+    .privacy summary::-webkit-details-marker { display: none; }
+    .privacy p { max-width: 330px; margin: 6px auto 0; line-height: 1.35; font-weight: 600; }
     .heart-btn {
       border: none; background: transparent; cursor: pointer;
       font-size: 1.8rem; line-height: 1; padding: 6px; border-radius: 50%;
@@ -144,14 +148,23 @@
 
     <div class="footer-heart">
       <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
+      <details class="privacy">
+        <summary>Privacidad</summary>
+        <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
+           para saber qué juegos y categorías gustan más y mejorar el sitio. Respetamos
+           “Do Not Track”.</p>
+      </details>
     </div>
   </main>
 
   <script src="js/sound.js"></script>
   <script src="js/words.js"></script>
+  <script src="js/analytics-config.js"></script>
+  <script src="js/analytics.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/progress.js"></script>
   <script>
+    Analytics.init();
     Progress.load();
     const daily = Progress.touchDaily();
 
@@ -184,7 +197,7 @@
       ).join("");
       document.getElementById("theme-label").textContent = "🎨 " + (cur === "all" ? "Tema" : CAT_MAP[cur].label);
       tb.querySelectorAll(".chip-t").forEach((b) =>
-        b.addEventListener("click", () => { Theme.set(b.dataset.k); renderChips(); })
+        b.addEventListener("click", () => { Theme.set(b.dataset.k); Analytics.track("theme_set", { category: b.dataset.k }); renderChips(); })
       );
     }
     renderChips();

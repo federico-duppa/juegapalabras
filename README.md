@@ -58,6 +58,24 @@ los juegos hacen fallback a todas.
 - **Continuar la partida**: cada juego guarda su sesión (`jp_sess_<juego>`). Si el
   chico sale y vuelve, retoma donde estaba (misma palabra, racha y tablero).
 
+## Privacidad y analítica
+
+Para entender qué juegos y contenidos gustan más (y decidir dónde sumar contenido) usamos
+**analítica anónima y agregada** con [Umami](https://umami.is) (cookieless, GDPR/CCPA).
+
+- **No** se recogen datos personales: ni nombres, ni edad, ni emails, ni texto libre, ni la
+  palabra individual que resuelve cada chico. Tampoco cookies de seguimiento ni fingerprint.
+- Solo se cuentan **eventos anónimos** con dimensiones acotadas: qué juego se abre, qué
+  categoría se resuelve, dificultad (uso de pista / errores / inactividad), retorno diario,
+  niveles y medallas. El progreso del jugador (`localStorage` `jp_*`) **nunca** se transmite.
+- Respeta **Do Not Track** y **Global Privacy Control** (si están activos, no envía nada).
+- Solo emite desde el sitio publicado (`allowedHost`); en local queda en no-op.
+- **Para desactivar todo:** dejá `scriptUrl`/`siteId` vacíos en `js/analytics-config.js`
+  (con `debug: true` los eventos se muestran en consola y no se envían).
+
+El wrapper es agnóstico del proveedor (`js/analytics.js`); cambiar de servicio es tocar un
+solo adaptador.
+
 ## Estructura
 
 ```
@@ -72,6 +90,9 @@ js/progress.js           → Estrellas + niveles + medallas + colección + racha
 js/words.js              → 134 palabras + emoji + categoría; CATEGORIES (compartido)
 js/theme.js              → Tema elegido (categoría o "todos") + filtrado
 js/qwerty.js             → Layout QWERTY compartido
+js/idle.js               → Brillo de la pista por inactividad (+ señal "se trabó")
+js/analytics.js          → Wrapper de analítica anónima (Umami), provider-agnóstico
+js/analytics-config.js   → Config de analítica (website-id; vacío = desactivado)
 games/word-guesser/      → "¡Adivina la Palabra!"  (index.html, style.css, game.js)
 games/ordena/            → "Ordena las Letras"     (index.html, style.css, game.js)
 games/letra-perdida/     → "Letra Perdida"         (index.html, style.css, game.js)

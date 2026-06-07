@@ -58,6 +58,18 @@ const Progress = (() => {
 
   function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
 
+  // Analítica segura (no rompe si Analytics no está cargado).
+  function track(name, props) {
+    try { if (typeof Analytics !== "undefined") Analytics.track(name, props); } catch (e) { /* swallow */ }
+  }
+  function trackProgress(before, after, newMedals) {
+    if (after > before) track("level_up", { level: after });
+    newMedals.forEach((m) => track("medal_earned", { id: m.id }));
+  }
+  function catOf(word) {
+    try { return (typeof Analytics !== "undefined") ? Analytics.catOf(word) : "?"; } catch (e) { return "?"; }
+  }
+
   // —— Fechas (para la racha diaria) ——
   function todayStr(d) {
     d = d || new Date();
@@ -120,6 +132,7 @@ const Progress = (() => {
       if (data.daily.streak > data.daily.best) data.daily.best = data.daily.streak;
       checkMedals();
       save();
+      track("daily_active", { streak: data.daily.streak });
       return data.daily;
     },
 
@@ -140,6 +153,8 @@ const Progress = (() => {
       const after = levelFor(data.stars).idx;
       const newMedals = checkMedals();
       save();
+      track("chest_open", { bonus: n });
+      trackProgress(before, after, newMedals);
       return { leveledUp: after > before, level: levelFor(data.stars), newMedals };
     },
 
@@ -153,6 +168,8 @@ const Progress = (() => {
       const after = levelFor(data.stars).idx;
       const newMedals = checkMedals();
       save();
+      track("solve", { game: game, category: catOf(word) });
+      trackProgress(before, after, newMedals);
       return {
         stars: data.stars,
         leveledUp: after > before,

@@ -173,6 +173,7 @@ function nextWord() {
   State.current = State.deck[State.i++];
   State.letters = Array.from(State.current.w).map(() => null);
   State.solved = false;
+  State.sentHint = false; State.sentWrong = false; // anti-spam de analítica por palabra
   el("message").textContent = "";
   renderClue();
   renderSlots();
@@ -216,6 +217,7 @@ function giveHint() {
   Sound.unlock();
   const idx = firstEmpty();
   if (idx === -1) return;
+  if (!State.sentHint) { State.sentHint = true; Analytics.track("hint_used", { game: "word-guesser" }); }
   const answer = Array.from(State.current.w);
   State.letters[idx] = { ch: baseChar(answer[idx]), hint: true };
   Sound.hint();
@@ -252,6 +254,7 @@ function win() {
 
 function lose() {
   Sound.wrong();
+  if (!State.sentWrong) { State.sentWrong = true; Analytics.track("wrong_attempt", { game: "word-guesser" }); }
   State.streak = 0;
   renderStats();
   renderSlots("shake");
@@ -329,14 +332,16 @@ function setupMute() {
 
 // ——— Init ———
 function init() {
+  Analytics.init();
   Progress.load();
   Progress.touchDaily();
+  Analytics.track("game_open", { game: "word-guesser" });
   buildKeyboard();
   setupMute();
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);
-  IdleHint.start(el("hint-btn"), 8000); // brilla la pista tras 8s sin tocar nada
+  IdleHint.start(el("hint-btn"), 8000, "word-guesser"); // brilla la pista tras 8s sin tocar nada
   // Continuar la partida anterior si existe; si no, empezar de cero.
   if (!restoreSession()) {
     State.deck = buildDeck();

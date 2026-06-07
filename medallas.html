@@ -59,8 +59,12 @@
     <section class="medals" id="medals"></section>
   </main>
 
+  <script src="js/words.js"></script>
+  <script src="js/analytics-config.js"></script>
+  <script src="js/analytics.js"></script>
   <script src="js/progress.js"></script>
   <script>
+    Analytics.init();
     Progress.load();
     const lv = Progress.level();
 

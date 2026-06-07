@@ -95,6 +95,7 @@ function newRound() {
   State.firstPick = null;
   State.busy = false;
   State.matched = 0;
+  State.sentWrong = false; // anti-spam de analítica por ronda
   State.roundBonus = { leveledUp: false, level: null, medals: [] };
   el("message").textContent = "";
   renderBoard();
@@ -179,6 +180,7 @@ function matchPair(i, j) {
 
 function missPair(i, j) {
   State.busy = true;
+  if (!State.sentWrong) { State.sentWrong = true; Analytics.track("wrong_attempt", { game: "memoria" }); }
   State.streak = 0;
   renderStats();
   saveSession();
@@ -299,8 +301,10 @@ function onKey(e) {
 }
 
 function init() {
+  Analytics.init();
   Progress.load();
   Progress.touchDaily();
+  Analytics.track("game_open", { game: "memoria" });
   setupMute();
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);

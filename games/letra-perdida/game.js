@@ -175,6 +175,7 @@ function newWord() {
   State.blankIdx = Math.floor(Math.random() * State.base.length);
   State.correct = State.base[State.blankIdx];
   State.solved = false;
+  State.sentHint = false; State.sentWrong = false; // anti-spam de analítica por palabra
 
   // Opciones: la correcta + 3 distractoras distintas.
   const pool = shuffle(ALPHABET.filter((l) => l !== State.correct));
@@ -196,6 +197,7 @@ function choose(letter, btn) {
     win();
   } else {
     Sound.wrong();
+    if (!State.sentWrong) { State.sentWrong = true; Analytics.track("wrong_attempt", { game: "letra-perdida" }); }
     State.streak = 0;
     renderStats();
     btn.classList.add("wrong");
@@ -208,6 +210,7 @@ function choose(letter, btn) {
 function giveHint() {
   if (State.solved) return;
   Sound.unlock();
+  if (!State.sentHint) { State.sentHint = true; Analytics.track("hint_used", { game: "letra-perdida" }); }
   // 50/50: deshabilita dos opciones incorrectas que sigan activas.
   const wrong = optionButtons().filter(
     (b) => b.dataset.letter !== State.correct && !b.disabled
@@ -286,13 +289,15 @@ function setupMute() {
 }
 
 function init() {
+  Analytics.init();
   Progress.load();
   Progress.touchDaily();
+  Analytics.track("game_open", { game: "letra-perdida" });
   setupMute();
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);
-  IdleHint.start(el("hint-btn"), 8000); // brilla la pista tras 8s sin tocar nada
+  IdleHint.start(el("hint-btn"), 8000, "letra-perdida"); // brilla la pista tras 8s sin tocar nada
   if (!restoreSession()) {
     State.deck = buildDeck();
     State.i = 0;
