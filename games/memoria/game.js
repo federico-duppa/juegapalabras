@@ -225,22 +225,83 @@ function applyRoundComplete() {
 
 // Festejo visual del fin de ronda (puede retrasarse sin riesgo de perder datos).
 function showRoundComplete() {
-  renderBoard(); // muestra el cofre abierto
-  Confetti.burst();
-  setTimeout(() => Confetti.burst(window.innerWidth * 0.3, window.innerHeight * 0.3), 220);
+  renderBoard(); // muestra el cofre abierto en el tablero
   Sound.levelUp();
   Encourage.onCelebrate(!Sound.isMuted()); // cada 4-7 festejos, frase alentadora
 
-  el("ov-emoji").textContent = State.hasCenter ? "🎁" : "🎉";
   el("ov-word").textContent = "¡Ronda completa!";
-  el("ov-praise").textContent = State.chestMsg || `Encontraste ${State.pairsTarget} pares 🧠`;
+  el("ov-praise").className = "praise";       // limpia animación de rondas previas
+  el("continue-btn").classList.remove("reward-pop");
+
+  // Partes de bonus (subida de nivel / medallas) — se arman siempre.
   const parts = [];
   if (State.roundBonus.leveledUp)
     parts.push(`<div class="lvl-up">¡Subiste a ${State.roundBonus.level.emoji} ${State.roundBonus.level.name}!</div>`);
   State.roundBonus.medals.forEach((m) =>
     parts.push(`<div class="medal-win">${m.emoji} Nueva medalla: ${m.name}</div>`));
-  el("ov-bonus").innerHTML = parts.join("");
+  const bonusHTML = parts.join("");
+
+  const ovEmoji = el("ov-emoji");
+
+  if (State.hasCenter && State.chestMsg) {
+    // Ronda con cofre: el chico TOCA el regalo para abrirlo (festejo extra).
+    State.chestOpened = false;
+    State.pendingBonus = bonusHTML;           // se revela al abrir
+    ovEmoji.textContent = "🎁";
+    ovEmoji.className = "big-emoji giftable";
+    ovEmoji.setAttribute("role", "button");
+    ovEmoji.setAttribute("aria-label", "Abrir el regalo");
+    ovEmoji.onclick = openChest;
+    el("ov-praise").textContent = "¡Tocá el regalo! 🎁";
+    el("ov-bonus").innerHTML = "";
+    el("continue-btn").style.display = "none"; // aparece al abrir el cofre
+    Confetti.burst();
+  } else {
+    // Ronda normal (sin cofre): festejo directo, como siempre.
+    ovEmoji.textContent = "🎉";
+    ovEmoji.className = "big-emoji";
+    ovEmoji.onclick = null;
+    ovEmoji.removeAttribute("role");
+    el("ov-praise").textContent = `Encontraste ${State.pairsTarget} pares 🧠`;
+    el("ov-bonus").innerHTML = bonusHTML;
+    el("continue-btn").style.display = "";
+    Confetti.burst();
+    setTimeout(() => Confetti.burst(window.innerWidth * 0.3, window.innerHeight * 0.3), 220);
+  }
+
   el("overlay").classList.add("show");
+}
+
+// El chico toca el regalo: vitoreo de muchos chicos + animación + revela las
+// estrellas. (El premio ya se sumó al puntaje en applyRoundComplete por seguridad
+// ante recargas; este toque es el festejo que lo muestra.)
+function openChest() {
+  if (State.chestOpened) return;
+  State.chestOpened = true;
+  Sound.unlock();
+  Sound.cheer();                              // ¡muchos chicos festejando!
+  Speech.cheer("¡Bravo!", !Sound.isMuted());  // una voz encima del vitoreo
+
+  const ovEmoji = el("ov-emoji");
+  ovEmoji.textContent = "🎉";
+  ovEmoji.className = "big-emoji opened";
+  ovEmoji.onclick = null;
+  ovEmoji.removeAttribute("role");
+
+  const praise = el("ov-praise");
+  praise.textContent = State.chestMsg;        // "🎁 ¡Cofre abierto! +N ⭐"
+  praise.className = "praise reward-pop";
+  el("ov-bonus").innerHTML = State.pendingBonus || "";
+
+  // Lluvia de confeti desde el regalo y a los costados.
+  const r = ovEmoji.getBoundingClientRect();
+  Confetti.burst(r.left + r.width / 2, r.top + r.height / 2);
+  setTimeout(() => Confetti.burst(window.innerWidth * 0.25, window.innerHeight * 0.35), 180);
+  setTimeout(() => Confetti.burst(window.innerWidth * 0.75, window.innerHeight * 0.35), 340);
+
+  const cont = el("continue-btn");
+  cont.style.display = "";
+  cont.classList.add("reward-pop");
 }
 
 function continueGame() {
@@ -311,7 +372,9 @@ function setupMute() {
 function onKey(e) {
   if (e.metaKey || e.ctrlKey || e.altKey) return;
   if (el("overlay").classList.contains("show") && (e.key === "Enter" || e.key === " ")) {
-    continueGame();
+    // Si hay un regalo sin abrir, primero abrirlo; si no, pasar a otra ronda.
+    if (State.hasCenter && State.chestMsg && !State.chestOpened) openChest();
+    else continueGame();
     e.preventDefault();
   }
 }

@@ -132,6 +132,33 @@
   100% { transform: scale(1); }
 }
 
+/* Regalo tocable en el modal de recompensa: tiembla invitando a tocarlo. */
+.celebrate .big-emoji.giftable {
+  display: inline-block; cursor: pointer; touch-action: manipulation;
+  animation: gift-wiggle 0.85s ease-in-out infinite;
+  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.12));
+}
+.celebrate .big-emoji.giftable:active { transform: scale(0.9); }
+@keyframes gift-wiggle {
+  0%, 100% { transform: rotate(-7deg) scale(1); }
+  50% { transform: rotate(7deg) scale(1.09); }
+}
+/* Al abrirlo: estalla. */
+.celebrate .big-emoji.opened { display: inline-block; animation: gift-burst 0.6s ease; }
+@keyframes gift-burst {
+  0% { transform: scale(0.7); }
+  40% { transform: scale(1.5) rotate(8deg); }
+  70% { transform: scale(0.95) rotate(-4deg); }
+  100% { transform: scale(1); }
+}
+/* Premio y botón que aparecen al abrir el cofre. */
+.celebrate .reward-pop { animation: reward-pop 0.5s ease; }
+@keyframes reward-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
 /* ===== Encaje en la pantalla visible (PWA): sin scroll, todas las cards a la vista =====
    El tablero ocupa el alto sobrante y reparte filas iguales (grid-auto-rows:1fr), que
    acotan el alto disponible para las cards (antes el aspect-ratio fijo se pasaba del
