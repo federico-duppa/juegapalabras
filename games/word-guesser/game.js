@@ -178,6 +178,7 @@ function nextWord() {
   renderSlots();
   renderStats();
   saveSession();
+  IdleHint.resume();
 }
 
 function firstEmpty() {
@@ -235,6 +236,7 @@ function check() {
 function win() {
   State.solved = true;
   State.streak += 1;
+  IdleHint.stop();
   const res = Progress.solve("word-guesser", State.streak, State.current.w);
   renderSlots();           // pinta verde
   renderStats();
@@ -334,6 +336,7 @@ function init() {
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);
+  IdleHint.start(el("hint-btn"), 8000); // brilla la pista tras 8s sin tocar nada
   // Continuar la partida anterior si existe; si no, empezar de cero.
   if (!restoreSession()) {
     State.deck = buildDeck();

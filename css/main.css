@@ -112,6 +112,13 @@ body {
 }
 .lvl-up { background: var(--purple); color: #2b1a55; }
 .medal-win { background: var(--yellow); color: #5a4500; }
+
+/* Brillo del botón de pista cuando el jugador está trabado (inactividad) */
+.glow { animation: glow-pulse 1.05s ease-in-out infinite; }
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: var(--shadow); transform: translateY(0) scale(1); }
+  50% { box-shadow: 0 0 0 5px rgba(255, 209, 102, 0.7), var(--shadow); transform: translateY(-1px) scale(1.05); }
+}
 @keyframes popin {
   0% { transform: scale(0.5); opacity: 0; }
   70% { transform: scale(1.1); }

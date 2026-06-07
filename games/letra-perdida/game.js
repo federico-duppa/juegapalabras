@@ -186,6 +186,7 @@ function newWord() {
   renderOptions();
   renderStats();
   saveSession();
+  IdleHint.resume();
 }
 
 function choose(letter, btn) {
@@ -220,6 +221,7 @@ function giveHint() {
 
 function win() {
   State.solved = true;
+  IdleHint.stop();
   State.streak += 1;
   const res = Progress.solve("letra-perdida", State.streak, State.current.w);
   renderWord();
@@ -290,6 +292,7 @@ function init() {
   el("hint-btn").addEventListener("click", giveHint);
   el("continue-btn").addEventListener("click", continueGame);
   document.addEventListener("keydown", onKey);
+  IdleHint.start(el("hint-btn"), 8000); // brilla la pista tras 8s sin tocar nada
   if (!restoreSession()) {
     State.deck = buildDeck();
     State.i = 0;
