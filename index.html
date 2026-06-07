@@ -127,7 +127,18 @@
       100% { transform: scale(1) rotate(0); }
     }
     /* Corazón + compartir, en una fila */
-    .footer-actions { display: flex; gap: 14px; align-items: center; justify-content: center; }
+    .footer-actions { display: flex; gap: 12px; align-items: center; justify-content: center; }
+    /* Compartir como pill con texto, para que se entienda la función de un vistazo */
+    .share-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      border: none; border-radius: 999px;
+      background: rgba(255,255,255,0.92); color: var(--ink);
+      font: inherit; font-weight: 800; font-size: 0.9rem;
+      padding: 10px 18px; box-shadow: var(--shadow);
+      cursor: pointer; touch-action: manipulation;
+      transition: transform 0.08s ease, filter 0.1s ease;
+    }
+    .share-pill:active { transform: scale(0.95); }
     /* Avisito breve (fallback de copiar link donde no hay share nativo) */
     .toast {
       position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
@@ -194,7 +205,7 @@
     <div class="footer-heart">
       <div class="footer-actions">
         <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
-        <button class="heart-btn" id="share" aria-label="Compartir" title="Compartir">📤</button>
+        <button class="share-pill" id="share" aria-label="Compartir la app"><span aria-hidden="true">📤</span> Compartir</button>
       </div>
       <div><button class="privacy-link" id="privacy-btn" aria-haspopup="dialog">Privacidad</button></div>
     </div>
@@ -296,9 +307,6 @@
     shareBtn.addEventListener("click", async () => {
       Sound.unlock();
       Sound.cute();
-      shareBtn.classList.remove("pop");
-      void shareBtn.offsetWidth;
-      shareBtn.classList.add("pop");
       Analytics.track("share_click");
       // Share nativo (Android/iOS): si el usuario cancela, no avisamos nada.
       if (navigator.share) {
