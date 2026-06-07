@@ -1,0 +1,105 @@
+/* ===== Base mobile-first vertical, para chicos ===== */
+:root {
+  --bg1: #6a4cff;
+  --bg2: #4cc9f0;
+  --card: #ffffff;
+  --ink: #2b2350;
+  --pink: #ff5d8f;
+  --yellow: #ffd166;
+  --green: #06d6a0;
+  --blue: #4cc9f0;
+  --purple: #b388ff;
+  --shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+  --radius: 22px;
+  font-size: clamp(16px, 4.4vw, 22px);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: "Baloo 2", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background: linear-gradient(160deg, var(--bg1), var(--bg2));
+  background-attachment: fixed;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Contenedor angosto tipo celular */
+.app {
+  width: 100%;
+  max-width: 480px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+}
+
+/* Botones grandes para dedos chiquitos */
+.btn {
+  border: none;
+  border-radius: var(--radius);
+  padding: 16px 22px;
+  font: inherit;
+  font-weight: 800;
+  color: var(--ink);
+  background: var(--yellow);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform 0.06s ease, box-shadow 0.06s ease, filter 0.1s;
+  touch-action: manipulation;
+}
+.btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
+.btn:disabled { filter: grayscale(0.5) opacity(0.55); cursor: default; }
+
+.btn-primary { background: var(--green); color: #053d2c; }
+.btn-pink { background: var(--pink); color: #fff; }
+.btn-ghost { background: rgba(255,255,255,0.85); }
+
+/* Encabezado con botón volver y mute */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+}
+.icon-btn {
+  width: 46px; height: 46px;
+  border: none; border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  box-shadow: var(--shadow);
+  font-size: 1.3rem; line-height: 1;
+  display: grid; place-items: center;
+  cursor: pointer; touch-action: manipulation;
+}
+.icon-btn:active { transform: translateY(3px); }
+.topbar .spacer { flex: 1; }
+.topbar h1 { font-size: 1.1rem; margin: 0; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+
+/* Bonus en el festejo: subida de nivel y medallas (compartido entre juegos) */
+.bonus { margin: 0 0 14px; }
+.bonus:empty { display: none; }
+.lvl-up, .medal-win {
+  font-weight: 800;
+  border-radius: 14px;
+  padding: 9px 12px;
+  margin-top: 8px;
+  animation: popin 0.4s ease;
+}
+.lvl-up { background: var(--purple); color: #2b1a55; }
+.medal-win { background: var(--yellow); color: #5a4500; }
+@keyframes popin {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}

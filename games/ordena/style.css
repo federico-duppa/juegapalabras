@@ -1,0 +1,110 @@
+/* ===== Ordena las Letras ===== */
+.game { flex: 1; display: flex; flex-direction: column; }
+
+.stats { display: flex; gap: 10px; justify-content: center; margin: 4px 0 6px; }
+.chip {
+  background: rgba(255,255,255,0.9);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  font-size: 0.95rem;
+}
+
+.clue { text-align: center; margin: 6px 0 2px; }
+.clue .emoji {
+  font-size: 5.2rem; line-height: 1.1;
+  filter: drop-shadow(0 6px 0 rgba(0,0,0,0.15));
+  animation: pop 0.4s ease;
+}
+.clue .cat {
+  display: inline-block; margin-top: 2px;
+  color: #fff; font-weight: 700; font-size: 0.8rem;
+  background: rgba(0,0,0,0.18); padding: 3px 12px; border-radius: 999px;
+}
+
+.slots {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin: 14px 0 6px; min-height: 56px;
+}
+.slot {
+  width: 44px; height: 54px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px; box-shadow: var(--shadow);
+  display: grid; place-items: center;
+  font-size: 1.7rem; font-weight: 800; color: var(--ink);
+  border: 3px solid transparent;
+}
+.slot.filled { animation: pop 0.18s ease; border-color: var(--blue); }
+.slot.correct { background: var(--green); color: #053d2c; border-color: #04b083; }
+.slots.shake { animation: shake 0.4s ease; }
+
+.message {
+  text-align: center; min-height: 30px;
+  color: #fff; font-weight: 800; font-size: 1.1rem;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.15); margin: 2px 0;
+}
+
+.actions { display: flex; gap: 10px; justify-content: center; margin: 6px 0 10px; }
+.actions .btn { padding: 12px 20px; font-size: 0.95rem; }
+
+.hint-line {
+  text-align: center; color: #fff; font-weight: 700;
+  margin: 2px 0; opacity: 0.9;
+}
+
+/* Teclado (solo letras de la palabra, en posición QWERTY) */
+.keyboard {
+  margin-top: auto;
+  padding-bottom: 8px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.krow { display: flex; gap: 5px; }
+.key {
+  flex: 1 1 0; min-width: 0; height: 48px;
+  border: none; border-radius: 10px;
+  background: #fff; color: var(--ink);
+  font: inherit; font-weight: 800;
+  font-size: clamp(0.85rem, 4.4vw, 1.1rem);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.18);
+  cursor: pointer; touch-action: manipulation;
+}
+.key:active,
+.key.pressed { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.18); }
+.key.pressed { background: #d9ecff; }
+.key[aria-label="Borrar"] { background: var(--pink); color: #fff; }
+.key.spacer { background: transparent; box-shadow: none; pointer-events: none; }
+
+/* Overlay de festejo */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(43, 35, 80, 0.55);
+  backdrop-filter: blur(3px);
+  display: none; place-items: center; z-index: 50; padding: 24px;
+}
+.overlay.show { display: grid; }
+.celebrate {
+  background: #fff; border-radius: 28px; padding: 26px 24px;
+  text-align: center; box-shadow: 0 10px 0 rgba(0,0,0,0.18);
+  animation: pop 0.35s ease; max-width: 360px; width: 100%;
+}
+.celebrate .big-emoji { font-size: 4.4rem; }
+.celebrate .word {
+  font-size: 2rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--ink); margin: 6px 0;
+}
+.celebrate .praise { font-size: 1.3rem; font-weight: 800; color: var(--pink); margin: 0 0 6px; }
+.celebrate .btn { width: 100%; font-size: 1.2rem; }
+
+@keyframes pop {
+  0% { transform: scale(0.6); }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(9px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}

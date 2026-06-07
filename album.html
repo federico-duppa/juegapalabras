@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#6a4cff" />
+  <title>📒 Mi Álbum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/main.css" />
+  <style>
+    .summary {
+      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 16px; text-align: center; margin: 8px 0 16px;
+    }
+    .summary .big { font-size: 1.5rem; font-weight: 800; }
+    .summary .sub { color: #6b6391; font-weight: 600; font-size: 0.85rem; }
+    .summary .bar { height: 14px; border-radius: 999px; background: #ece8fb; overflow: hidden; margin-top: 10px; }
+    .summary .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); border-radius: 999px; }
+
+    .cat-block { margin-bottom: 18px; }
+    .cat-head {
+      display: flex; align-items: center; gap: 8px;
+      color: #fff; font-weight: 800; margin: 0 2px 8px;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.15);
+    }
+    .cat-head .count {
+      margin-left: auto; font-size: 0.8rem; background: rgba(0,0,0,0.18);
+      padding: 2px 10px; border-radius: 999px;
+    }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .sticker {
+      background: #fff; border-radius: 16px; box-shadow: var(--shadow);
+      padding: 10px 6px; text-align: center;
+    }
+    .sticker .emo { font-size: 2.2rem; line-height: 1.1; }
+    .sticker .w { font-size: 0.72rem; font-weight: 800; margin-top: 3px; color: var(--ink); word-break: break-word; }
+    .sticker.locked { background: #eee9f7; }
+    .sticker.locked .emo { filter: grayscale(1) opacity(0.25); }
+    .sticker.locked .emo::after { content: "❓"; }
+    .sticker.locked .w { color: #b3acce; }
+    .sticker.locked .emo { font-size: 2.2rem; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <a class="icon-btn" href="index.html" aria-label="Volver">🏠</a>
+      <h1>📒 Mi Álbum</h1>
+    </header>
+
+    <section class="summary" id="summary"></section>
+    <div id="cats"></div>
+  </main>
+
+  <script src="js/words.js"></script>
+  <script src="js/progress.js"></script>
+  <script>
+    Progress.load();
+    const total = WORDS.length;
+    const got = Progress.wordCount();
+    document.getElementById("summary").innerHTML = `
+      <div class="big">📒 ${got} de ${total} palabras</div>
+      <div class="sub">¡Junta todas para completar el álbum!</div>
+      <div class="bar"><span style="width:${total ? Math.round(got / total * 100) : 0}%"></span></div>
+    `;
+
+    const byCat = {};
+    WORDS.forEach((w) => { (byCat[w.c] ||= []).push(w); });
+
+    document.getElementById("cats").innerHTML = CATEGORIES.map((cat) => {
+      const list = byCat[cat.key] || [];
+      const earned = list.filter((w) => Progress.hasWord(w.w)).length;
+      const cards = list.map((w) => {
+        const has = Progress.hasWord(w.w);
+        return `<div class="sticker ${has ? "" : "locked"}">
+          <div class="emo">${has ? w.e : ""}</div>
+          <div class="w">${has ? w.w : "?"}</div>
+        </div>`;
+      }).join("");
+      return `<section class="cat-block">
+        <div class="cat-head">${cat.emoji} ${cat.label} <span class="count">${earned}/${list.length}</span></div>
+        <div class="grid">${cards}</div>
+      </section>`;
+    }).join("");
+  </script>
+</body>
+</html>

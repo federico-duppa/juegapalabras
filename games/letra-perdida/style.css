@@ -1,0 +1,123 @@
+/* ===== Letra Perdida ===== */
+.game { flex: 1; display: flex; flex-direction: column; }
+
+.stats { display: flex; gap: 10px; justify-content: center; margin: 4px 0 6px; }
+.chip {
+  background: rgba(255,255,255,0.9);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  font-size: 0.95rem;
+}
+
+.clue { text-align: center; margin: 6px 0 2px; }
+.clue .emoji {
+  font-size: 5.2rem; line-height: 1.1;
+  filter: drop-shadow(0 6px 0 rgba(0,0,0,0.15));
+  animation: pop 0.4s ease;
+}
+.clue .cat {
+  display: inline-block; margin-top: 2px;
+  color: #fff; font-weight: 700; font-size: 0.8rem;
+  background: rgba(0,0,0,0.18); padding: 3px 12px; border-radius: 999px;
+}
+
+/* Palabra con la letra faltante */
+.word {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; margin: 16px 0 8px; min-height: 56px;
+}
+.tile {
+  width: 44px; height: 54px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 12px; box-shadow: var(--shadow);
+  display: grid; place-items: center;
+  font-size: 1.7rem; font-weight: 800; color: var(--ink);
+  border: 3px solid transparent;
+}
+.tile.blank {
+  background: var(--yellow); color: #b07b00;
+  border-color: #e0a800; border-style: dashed;
+  animation: pulse 1.1s ease-in-out infinite;
+}
+.tile.correct { background: var(--green); color: #053d2c; border-color: #04b083; }
+
+.message {
+  text-align: center; min-height: 30px;
+  color: #fff; font-weight: 800; font-size: 1.05rem;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.15); margin: 2px 0;
+}
+
+/* Opciones en posición QWERTY (solo se muestran las letras ofrecidas) */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.orow { display: flex; gap: 6px; }
+.opt {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 60px;
+  border: none; border-radius: 14px;
+  background: #fff; color: var(--ink);
+  font: inherit; font-weight: 800;
+  font-size: clamp(1.1rem, 5.5vw, 1.7rem);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.18);
+  cursor: pointer; touch-action: manipulation;
+  transition: transform 0.06s ease;
+  display: grid; place-items: center;
+}
+.opt:active,
+.opt.pressed { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.18); }
+.opt.pressed { background: #d9ecff; }
+/* Hueco que mantiene la posición QWERTY sin mostrar tecla */
+.opt.spacer { background: transparent; box-shadow: none; pointer-events: none; }
+.opt.wrong {
+  background: #e9c9d4; color: #b06; opacity: 0.55;
+  animation: shake 0.4s ease;
+}
+
+.actions { display: flex; gap: 10px; justify-content: center; margin: 10px 0; }
+.actions .btn { padding: 12px 20px; font-size: 0.95rem; }
+.keep-bottom { margin-top: auto; }
+
+/* Overlay de festejo (compartido en estilo con el otro juego) */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(43, 35, 80, 0.55);
+  backdrop-filter: blur(3px);
+  display: none; place-items: center; z-index: 50; padding: 24px;
+}
+.overlay.show { display: grid; }
+.celebrate {
+  background: #fff; border-radius: 28px; padding: 26px 24px;
+  text-align: center; box-shadow: 0 10px 0 rgba(0,0,0,0.18);
+  animation: pop 0.35s ease; max-width: 360px; width: 100%;
+}
+.celebrate .big-emoji { font-size: 4.4rem; }
+.celebrate .word {
+  font-size: 2rem; font-weight: 800; letter-spacing: 2px;
+  color: var(--ink); margin: 6px 0;
+}
+.celebrate .praise { font-size: 1.3rem; font-weight: 800; color: var(--pink); margin: 0 0 6px; }
+.celebrate .btn { width: 100%; font-size: 1.2rem; }
+
+@keyframes pop {
+  0% { transform: scale(0.6); }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(9px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#6a4cff" />
+  <title>🔤 Memoria de Palabras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../css/main.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app game">
+    <header class="topbar">
+      <a class="icon-btn" href="../../index.html" aria-label="Volver">🏠</a>
+      <h1>🔤 Memoria de Palabras</h1>
+      <span class="spacer"></span>
+      <button class="icon-btn" id="mute" aria-label="Sonido">🔊</button>
+    </header>
+
+    <div class="stats">
+      <span class="chip" id="stars">⭐ 0</span>
+      <span class="chip" id="streak">🔥 0</span>
+    </div>
+
+    <p class="hint-line">Encuentra cada emoji con su palabra 🔎</p>
+    <div class="message" id="message"></div>
+
+    <div class="board" id="board"></div>
+  </main>
+
+  <div class="overlay" id="overlay">
+    <div class="celebrate">
+      <div class="big-emoji" id="ov-emoji">🎉</div>
+      <div class="word" id="ov-word"></div>
+      <div class="praise" id="ov-praise"></div>
+      <div class="bonus" id="ov-bonus"></div>
+      <button class="btn btn-primary" id="continue-btn">Otra ronda ▶</button>
+    </div>
+  </div>
+
+  <script src="../../js/sound.js"></script>
+  <script src="../../js/confetti.js"></script>
+  <script src="../../js/speech.js"></script>
+  <script src="../../js/progress.js"></script>
+  <script src="../../js/words.js"></script>
+  <script src="../../js/theme.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
