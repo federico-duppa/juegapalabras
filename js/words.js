@@ -126,7 +126,7 @@ const WORDS = [
   { w: "SILLA", e: "🪑", c: "casa" },
   { w: "CAMA", e: "🛏️", c: "casa" },
   { w: "PUERTA", e: "🚪", c: "casa" },
-  { w: "VENTANA", e: "🪟", c: "casa" },
+  { w: "SOFÁ", e: "🛋️", c: "casa" },
   { w: "LÁMPARA", e: "💡", c: "casa" },
   { w: "TELÉFONO", e: "☎️", c: "casa" },
   { w: "TELEVISOR", e: "📺", c: "casa" },
@@ -164,7 +164,7 @@ const WORDS = [
   { w: "TROMPETA", e: "🎺", c: "instrumentos" },
   { w: "VIOLÍN", e: "🎻", c: "instrumentos" },
   { w: "SAXOFÓN", e: "🎷", c: "instrumentos" },
-  { w: "MARACAS", e: "🪇", c: "instrumentos" },
+  { w: "MICRÓFONO", e: "🎤", c: "instrumentos" },
   { w: "CAMPANA", e: "🔔", c: "instrumentos" },
 
   // —— Cosas ——

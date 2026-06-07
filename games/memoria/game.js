@@ -54,7 +54,9 @@ function effectiveTier() {
   const avail = memoriaPool().length;
   let idx = getLevel();
   while (idx > 0 && tierInfo(TIERS[idx]).pairs > avail) idx--;
-  return tierInfo(TIERS[idx]);
+  const t = tierInfo(TIERS[idx]);
+  t.idx = idx;
+  return t;
 }
 
 const State = {
@@ -80,6 +82,7 @@ function newRound() {
   State.cols = t.cols; State.rows = t.rows;
   State.hasCenter = t.hasCenter; State.centerIndex = t.centerIndex;
   State.pairsTarget = t.pairs;
+  State.tierIdx = t.idx;
 
   const picks = shuffle(memoriaPool()).slice(0, t.pairs);
   const pairCards = [];
@@ -180,7 +183,8 @@ function matchPair(i, j) {
 
   if (State.matched === State.pairsTarget) {
     State.busy = true;
-    setTimeout(roundComplete, 650);
+    applyRoundComplete();              // aplica premio/nivel YA (un reload no lo pierde)
+    setTimeout(showRoundComplete, 650); // y muestra el festejo después
   }
 }
 
@@ -201,30 +205,34 @@ function missPair(i, j) {
   }, 850);
 }
 
-function roundComplete() {
-  let chestMsg = "";
-  // Abrir el cofre del centro (si lo hay) y dar premio.
+// Datos del fin de ronda: se aplican apenas se completa (así un reload no pierde
+// el premio del cofre ni la subida de nivel).
+function applyRoundComplete() {
+  State.chestMsg = "";
   if (State.hasCenter && State.centerIndex >= 0 && State.cards[State.centerIndex]) {
     State.cards[State.centerIndex].opened = true;
-    renderBoard();
     const bonus = 2 + Math.floor(Math.random() * 3); // 2 a 4 estrellas
     const cres = Progress.addBonusStars(bonus);
     if (cres.leveledUp) { State.roundBonus.leveledUp = true; State.roundBonus.level = cres.level; }
     State.roundBonus.medals.push(...cres.newMedals);
-    chestMsg = `🎁 ¡Cofre abierto! +${bonus} ⭐`;
-    renderStats();
+    State.chestMsg = `🎁 ¡Cofre abierto! +${bonus} ⭐`;
   }
+  // Subir el nivel SOLO si jugamos en la frontera (evita saltos al cambiar de tema).
+  if (State.tierIdx === getLevel()) setLevel(getLevel() + 1);
+  renderStats();
+  saveSession();
+}
 
-  // Subir el nivel del tablero para la próxima ronda.
-  setLevel(getLevel() + 1);
-
+// Festejo visual del fin de ronda (puede retrasarse sin riesgo de perder datos).
+function showRoundComplete() {
+  renderBoard(); // muestra el cofre abierto
   Confetti.burst();
   setTimeout(() => Confetti.burst(window.innerWidth * 0.3, window.innerHeight * 0.3), 220);
   Sound.levelUp();
 
   el("ov-emoji").textContent = State.hasCenter ? "🎁" : "🎉";
   el("ov-word").textContent = "¡Ronda completa!";
-  el("ov-praise").textContent = chestMsg || `Encontraste ${State.pairsTarget} pares 🧠`;
+  el("ov-praise").textContent = State.chestMsg || `Encontraste ${State.pairsTarget} pares 🧠`;
   const parts = [];
   if (State.roundBonus.leveledUp)
     parts.push(`<div class="lvl-up">¡Subiste a ${State.roundBonus.level.emoji} ${State.roundBonus.level.name}!</div>`);
@@ -232,7 +240,6 @@ function roundComplete() {
     parts.push(`<div class="medal-win">${m.emoji} Nueva medalla: ${m.name}</div>`));
   el("ov-bonus").innerHTML = parts.join("");
   el("overlay").classList.add("show");
-  saveSession();
 }
 
 function continueGame() {
@@ -248,7 +255,7 @@ function saveSession() {
     localStorage.setItem(SKEY, JSON.stringify({
       theme: Theme.get(),
       cols: State.cols, rows: State.rows, hasCenter: State.hasCenter,
-      centerIndex: State.centerIndex, pairsTarget: State.pairsTarget,
+      centerIndex: State.centerIndex, pairsTarget: State.pairsTarget, tierIdx: State.tierIdx,
       cards: State.cards.map((c) => c.type === "chest"
         ? { type: "chest", content: c.content, matched: false, opened: !!c.opened }
         : { word: c.word, type: c.type, content: c.content, matched: c.matched }),
@@ -273,6 +280,7 @@ function restoreSession() {
   State.cols = s.cols || 2; State.rows = s.rows || 2;
   State.hasCenter = !!s.hasCenter; State.centerIndex = typeof s.centerIndex === "number" ? s.centerIndex : -1;
   State.pairsTarget = s.pairsTarget || State.cards.filter((c) => c.type !== "chest").length / 2;
+  State.tierIdx = (typeof s.tierIdx === "number") ? s.tierIdx : getLevel();
   State.firstPick = null;
   State.busy = false;
   State.matched = State.cards.filter((c) => c.type !== "chest" && c.matched).length / 2;

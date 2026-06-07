@@ -92,12 +92,10 @@
     .chip-t.active { background: var(--yellow); }
 
     .footer-heart { text-align: center; margin: 16px 0 14px; }
-    .foot-line { margin-top: 8px; display: flex; gap: 6px; justify-content: center; align-items: baseline; }
-    .privacy { color: #fff; opacity: 0.72; font-size: 0.7rem; }
+    .privacy { margin-top: 8px; color: #fff; opacity: 0.72; font-size: 0.7rem; }
     .privacy summary { cursor: pointer; font-weight: 700; list-style: none; }
     .privacy summary::-webkit-details-marker { display: none; }
     .privacy p { max-width: 330px; margin: 6px auto 0; line-height: 1.35; font-weight: 600; text-align: center; }
-    .version { color: #fff; opacity: 0.55; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.5px; }
     .heart-btn {
       border: none; background: transparent; cursor: pointer;
       font-size: 1.8rem; line-height: 1; padding: 6px; border-radius: 50%;
@@ -168,14 +166,11 @@
 
     <div class="footer-heart">
       <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
-      <div class="foot-line">
-        <details class="privacy">
-          <summary>Privacidad</summary>
-          <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
-             para saber qué juegos y categorías gustan más y mejorar el sitio.</p>
-        </details>
-        <span class="version" id="app-version"></span>
-      </div>
+      <details class="privacy">
+        <summary>Privacidad</summary>
+        <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
+           para saber qué juegos y categorías gustan más y mejorar el sitio.</p>
+      </details>
     </div>
   </main>
 
@@ -224,13 +219,13 @@
     }
     renderChips();
 
-    // Versión visible (sutil) en el footer
-    if (typeof APP_VERSION !== "undefined") {
-      document.getElementById("app-version").textContent = "· v" + APP_VERSION;
-    }
-
-    // Corazón del footer: ruidito tierno + rebote al tocarlo
+    // El COLOR del corazón indica la versión publicada (para saber qué versión estás
+    // viendo). La versión exacta queda en el tooltip.
     const heart = document.getElementById("heart");
+    if (typeof HEART_EMOJI !== "undefined") heart.textContent = HEART_EMOJI;
+    if (typeof APP_VERSION !== "undefined") heart.title = "v" + APP_VERSION;
+
+    // ruidito tierno + rebote al tocarlo
     heart.addEventListener("click", () => {
       Sound.unlock();
       Sound.cute();

@@ -1,6 +1,11 @@
-// Versión de la app (se muestra en el footer y se adjunta a los eventos de analítica).
+// Versión de la app (se adjunta a los eventos de analítica; en el tooltip del corazón).
 // Subila en cada release para correlacionar métricas entre versiones.
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.1.1";
+
+// El COLOR del corazón del footer cambia en cada release: sirve para saber a simple
+// vista qué versión estás viendo en el navegador (sin testear algo no publicado).
+// Rotación sugerida: 💜 → 💙 → 💚 → 💛 → 🧡 → ❤️ → 🤍 → 🖤 → (volver a 💜)
+const HEART_EMOJI = "💙"; // v1.1.1
 
 // Configuración de analítica (Umami Cloud). El website-id es público (va en el HTML
 // del sitio estático), no es un secreto. Para DESACTIVAR todo: dejá scriptUrl/siteId
