@@ -27,6 +27,7 @@ Después abrí en el celular (misma red) o en el navegador:
 
 | Juego | Estado | Qué practica |
 |-------|--------|--------------|
+| 🧭 Modo Aventura | ✅ Listo | Va rotando entre los cuatro juegos (uno tras otro) para que no se estanque en un solo estilo |
 | 🐶 ¡Adivina la Palabra! | ✅ Listo | Vocabulario + ortografía (escribir la palabra del emoji) |
 | 🔀 Ordena las Letras | ✅ Listo | Ortografía (tocar las letras de la palabra en orden, en posición QWERTY) |
 | 🎯 Letra Perdida | ✅ Listo | Ortografía (elegir la letra que falta entre 4 opciones) |
@@ -55,6 +56,8 @@ los juegos hacen fallback a todas.
 - **Racha diaria 🔥**: jugar días seguidos suma; se ve en el hub.
 - **Mascota Búho 🦉**: saluda en el hub con mensajes según el progreso.
 - **Voz al acertar**: lee la palabra en voz alta (Web Speech API). Respeta 🔇.
+- **Mensajes alentadores hablados**: cada 4–7 festejos, una voz dice algo lindo
+  ("¡Muy bueno!", "¡Excelente!", "¡Seguí así!"). El conteo es compartido entre juegos.
 - **Continuar la partida**: cada juego guarda su sesión (`jp_sess_<juego>`). Si el
   chico sale y vuelve, retoma donde estaba (misma palabra, racha y tablero).
 

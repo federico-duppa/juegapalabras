@@ -79,6 +79,34 @@
     .game-card h2 { margin: 2px 0 0; font-size: 1rem; line-height: 1.1; }
     .game-card p { margin: 0; font-size: 0.72rem; opacity: 0.7; font-weight: 600; line-height: 1.15; }
 
+    /* Modo Aventura: protagonista, ancho completo y resaltado arriba de la grilla. */
+    .adventure-card {
+      display: flex; align-items: center; gap: 14px; width: 100%;
+      text-decoration: none; color: #fff; cursor: pointer; border: none;
+      text-align: left; font: inherit;
+      background: linear-gradient(120deg, #ff5d8f, #ffd166 55%, #06d6a0);
+      background-size: 200% 100%;
+      border-radius: 22px; padding: 16px 16px; margin-bottom: 4px;
+      box-shadow: 0 8px 0 rgba(0,0,0,0.16);
+      transition: transform 0.08s ease;
+      animation: adv-shift 5s ease-in-out infinite;
+    }
+    .adventure-card:active { transform: scale(0.97); }
+    @keyframes adv-shift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    .adventure-card .ac-emoji {
+      font-size: 2.2rem; width: 60px; height: 60px; flex-shrink: 0;
+      display: grid; place-items: center; border-radius: 18px;
+      background: rgba(255,255,255,0.25); animation: bob 2.4s ease-in-out infinite;
+    }
+    .adventure-card .ac-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .adventure-card .ac-txt b { font-size: 1.15rem; font-weight: 800; text-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+    .adventure-card .ac-txt span { font-size: 0.74rem; font-weight: 700; opacity: 0.95; }
+    .adventure-card .ac-go {
+      margin-left: auto; flex-shrink: 0; font-weight: 800; font-size: 0.85rem;
+      background: rgba(255,255,255,0.9); color: var(--ink);
+      border-radius: 999px; padding: 8px 14px;
+    }
+
     /* Tema: control secundario, compacto, debajo de los juegos */
     .theme-row { display: flex; align-items: center; gap: 8px; margin: 18px 0 4px; }
     .theme-row .tlabel { color: #fff; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; text-shadow: 0 2px 0 rgba(0,0,0,0.15); }
@@ -174,6 +202,14 @@
     </div>
 
     <h2 class="section-title">🎮 Elegí un juego</h2>
+    <button class="adventure-card" id="adventure-btn" aria-label="Empezar el Modo Aventura">
+      <span class="ac-emoji" aria-hidden="true">🧭</span>
+      <span class="ac-txt">
+        <b>🌟 Modo Aventura</b>
+        <span>Todos los juegos, uno tras otro</span>
+      </span>
+      <span class="ac-go" aria-hidden="true">¡Jugar! ▶</span>
+    </button>
     <nav class="games">
       <a class="game-card c1" href="games/word-guesser/index.html">
         <span class="emoji">🐶</span>
@@ -228,10 +264,21 @@
   <script src="js/analytics.js"></script>
   <script src="js/theme.js"></script>
   <script src="js/progress.js"></script>
+  <script src="js/adventure.js"></script>
   <script>
     Analytics.init();
     Progress.load();
     const daily = Progress.touchDaily();
+
+    // Llegar al menú (por cualquier vía) termina la aventura. La tarjeta de abajo
+    // la vuelve a prender justo antes de navegar. Así un juego puntual nunca se
+    // comporta como aventura por un flag que quedó colgado.
+    Adventure.stop();
+    document.getElementById("adventure-btn").addEventListener("click", () => {
+      Sound.unlock();
+      Analytics.track("adventure_start");
+      Adventure.start(); // prende el flag y navega al primer juego
+    });
 
     const lv = Progress.level();
     document.getElementById("ps-emoji").textContent = lv.emoji;

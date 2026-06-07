@@ -90,6 +90,14 @@ body {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
+/* Modo Aventura: brújula al lado del título + borde animado en la pantalla. */
+.topbar h1 .adv-badge { margin-left: 6px; font-size: 0.95em; }
+body.adventure .topbar h1 { animation: adv-glow 2.2s ease-in-out infinite; }
+@keyframes adv-glow {
+  0%, 100% { text-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+  50% { text-shadow: 0 2px 0 rgba(0,0,0,0.15), 0 0 12px rgba(255,209,102,0.95); }
+}
+
 /* Botón claro de volver al menú (en cada juego) */
 .btn-menu {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;

@@ -174,6 +174,7 @@ function win() {
   renderStats();
   saveSession();
   Speech.say(State.current.w, !Sound.isMuted());
+  Encourage.onCelebrate(!Sound.isMuted());       // cada 4-7 festejos, frase alentadora
   const milestone = State.streak > 0 && State.streak % 5 === 0;
   const big = milestone || res.leveledUp || res.newMedals.length > 0;
   if (big) Sound.levelUp(); else Sound.correct();
@@ -212,6 +213,7 @@ function showCelebration(res, milestone) {
 
 function continueGame() {
   el("overlay").classList.remove("show");
+  if (typeof Adventure !== "undefined" && Adventure.active()) { Adventure.go(); return; }
   nextWord();
 }
 

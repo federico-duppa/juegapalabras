@@ -229,6 +229,7 @@ function showRoundComplete() {
   Confetti.burst();
   setTimeout(() => Confetti.burst(window.innerWidth * 0.3, window.innerHeight * 0.3), 220);
   Sound.levelUp();
+  Encourage.onCelebrate(!Sound.isMuted()); // cada 4-7 festejos, frase alentadora
 
   el("ov-emoji").textContent = State.hasCenter ? "🎁" : "🎉";
   el("ov-word").textContent = "¡Ronda completa!";
@@ -244,6 +245,7 @@ function showRoundComplete() {
 
 function continueGame() {
   el("overlay").classList.remove("show");
+  if (typeof Adventure !== "undefined" && Adventure.active()) { Adventure.go(); return; }
   newRound();
 }
 
