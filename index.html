@@ -126,6 +126,17 @@
       55% { transform: scale(0.92) rotate(6deg); }
       100% { transform: scale(1) rotate(0); }
     }
+    /* Corazón + compartir, en una fila */
+    .footer-actions { display: flex; gap: 14px; align-items: center; justify-content: center; }
+    /* Avisito breve (fallback de copiar link donde no hay share nativo) */
+    .toast {
+      position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+      transform: translateX(-50%) translateY(8px);
+      background: rgba(43,35,80,0.92); color: #fff; font-weight: 800; font-size: 0.85rem;
+      padding: 10px 16px; border-radius: 999px; box-shadow: var(--shadow);
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; z-index: 60;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
@@ -181,10 +192,15 @@
     <div class="themebar" id="themebar"></div>
 
     <div class="footer-heart">
-      <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
+      <div class="footer-actions">
+        <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
+        <button class="heart-btn" id="share" aria-label="Compartir" title="Compartir">📤</button>
+      </div>
       <div><button class="privacy-link" id="privacy-btn" aria-haspopup="dialog">Privacidad</button></div>
     </div>
   </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="overlay" id="privacy-overlay" role="dialog" aria-modal="true" aria-label="Privacidad">
     <div class="sheet">
@@ -257,6 +273,44 @@
       heart.classList.add("pop");
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.getRegistration().then((r) => { if (r) r.update(); }).catch(() => {});
+      }
+    });
+
+    // Compartir: abre el cajón nativo del sistema (Web Share API). En Android/iOS muestra
+    // WhatsApp, contactos, etc. con el link a la app. Donde no exista (escritorio), copia
+    // el link al portapapeles y avisa con un toast.
+    const toast = document.getElementById("toast");
+    let toastT = null;
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastT);
+      toastT = setTimeout(() => toast.classList.remove("show"), 1900);
+    }
+    const shareData = {
+      title: "JuegaPalabras 🎈",
+      text: "Juegos para que los chicos aprendan vocabulario y ortografía jugando con emojis 🎈",
+      url: location.href,
+    };
+    const shareBtn = document.getElementById("share");
+    shareBtn.addEventListener("click", async () => {
+      Sound.unlock();
+      Sound.cute();
+      shareBtn.classList.remove("pop");
+      void shareBtn.offsetWidth;
+      shareBtn.classList.add("pop");
+      Analytics.track("share_click");
+      // Share nativo (Android/iOS): si el usuario cancela, no avisamos nada.
+      if (navigator.share) {
+        try { await navigator.share(shareData); } catch (e) { /* cancelado */ }
+        return;
+      }
+      // Sin share nativo (escritorio): copiar el link, y si no se pudo, mostrarlo.
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        showToast("¡Link copiado! 📋");
+      } catch (e) {
+        showToast(shareData.url);
       }
     });
 
