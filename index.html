@@ -9,140 +9,124 @@
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/main.css" />
   <style>
-    .hero { text-align: center; color: #fff; padding: 14px 0 2px; text-shadow: 0 3px 0 rgba(0,0,0,0.15); }
-    .hero .logo { font-size: 3rem; margin: 0; line-height: 1.1; }
-    .hero p { margin: 4px 0 0; font-weight: 600; opacity: 0.95; font-size: 0.9rem; }
-
-    /* Mascota */
-    .mascota { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
-    .mascota .buho { font-size: 2.8rem; flex-shrink: 0; animation: bob 2.4s ease-in-out infinite; }
-    .mascota .bubble {
-      flex: 1; background: #fff; color: var(--ink);
-      border-radius: 16px; padding: 10px 14px; font-weight: 700; font-size: 0.88rem;
-      box-shadow: var(--shadow); position: relative;
+    /* Encabezado compacto: marca + mascota chica en una línea */
+    .top {
+      display: flex; align-items: center; gap: 10px;
+      color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,0.15);
+      padding: 10px 2px 2px;
     }
-    .mascota .bubble::before {
-      content: ""; position: absolute; left: -8px; top: 18px;
-      border: 8px solid transparent; border-right-color: #fff; border-left: 0;
+    .top .logo { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .top .buho { font-size: 1.7rem; margin-left: auto; animation: bob 2.4s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .greeting {
+      color: #fff; opacity: 0.95; font-weight: 600; font-size: 0.82rem;
+      margin: 0 2px 0; text-shadow: 0 1px 0 rgba(0,0,0,0.12);
     }
-    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    /* Tira de progreso (nivel + medallero) */
-    .progress-strip {
-      display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink);
-      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 12px 14px; margin-top: 14px; transition: transform 0.08s ease;
+    /* Barra de estado compacta: nivel + álbum + racha en una fila */
+    .statbar { display: flex; gap: 8px; margin: 10px 0 4px; }
+    .pill {
+      flex: 1; display: flex; align-items: center; gap: 8px;
+      background: #fff; color: var(--ink); text-decoration: none;
+      border-radius: 16px; box-shadow: var(--shadow); padding: 8px 10px;
+      transition: transform 0.08s ease; min-width: 0;
     }
-    .progress-strip:active { transform: scale(0.98); }
-    .progress-strip .lv-emoji { font-size: 2.2rem; flex-shrink: 0; }
-    .progress-strip .lv-info { flex: 1; min-width: 0; }
-    .progress-strip .lv-top { display: flex; justify-content: space-between; align-items: baseline; font-weight: 800; font-size: 0.92rem; }
-    .progress-strip .lv-stars { color: #6b6391; font-size: 0.82rem; }
-    .progress-strip .bar { height: 12px; border-radius: 999px; background: #ece8fb; overflow: hidden; margin-top: 6px; }
-    .progress-strip .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--blue)); border-radius: 999px; }
-    .progress-strip .chev { font-size: 1.4rem; color: #b6b0d6; flex-shrink: 0; }
+    .pill:active { transform: scale(0.97); }
+    .pill .pe { font-size: 1.4rem; flex-shrink: 0; }
+    .pill .pt { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
+    .pill .pt b { font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .pill .pt small { color: #6b6391; font-size: 0.68rem; font-weight: 700; }
+    .pill.level { flex: 1.5; }
 
-    /* Fila rápida: álbum + racha diaria */
-    .quick-row { display: flex; gap: 12px; margin-top: 12px; }
-    .quick {
-      flex: 1; display: flex; align-items: center; gap: 10px;
-      background: #fff; border-radius: var(--radius); box-shadow: var(--shadow);
-      padding: 12px; text-decoration: none; color: var(--ink); transition: transform 0.08s ease;
+    /* Juegos: protagonistas, grilla 2x2 */
+    .section-title {
+      color: #fff; font-weight: 800; font-size: 1rem; margin: 16px 2px 8px;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.15);
     }
-    .quick:active { transform: scale(0.97); }
-    .quick .q-emoji { font-size: 1.8rem; }
-    .quick .q-text { display: flex; flex-direction: column; line-height: 1.15; }
-    .quick .q-text b { font-size: 0.95rem; }
-    .quick .q-text small { color: #6b6391; font-size: 0.72rem; font-weight: 600; }
-
-    /* Selector de tema */
-    .theme-label { color: #fff; font-weight: 700; font-size: 0.85rem; margin: 16px 2px 6px; text-shadow: 0 2px 0 rgba(0,0,0,0.15); }
-    .themebar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; -webkit-overflow-scrolling: touch; }
-    .themebar::-webkit-scrollbar { height: 0; }
-    .chip-t {
-      flex: 0 0 auto; background: rgba(255,255,255,0.85); border: none; border-radius: 999px;
-      padding: 8px 14px; font: inherit; font-weight: 800; font-size: 0.85rem; color: var(--ink);
-      box-shadow: var(--shadow); cursor: pointer; white-space: nowrap; touch-action: manipulation;
-    }
-    .chip-t.active { background: var(--yellow); }
-
-    /* Juegos */
-    .games { display: grid; gap: 14px; margin-top: 10px; }
+    .games { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .game-card {
-      display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--ink);
-      background: var(--card); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow);
-      transition: transform 0.08s ease;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+      text-decoration: none; color: var(--ink);
+      background: var(--card); border-radius: 22px; padding: 18px 10px 14px;
+      box-shadow: var(--shadow); transition: transform 0.08s ease;
     }
-    .game-card:active { transform: scale(0.97); }
+    .game-card:active { transform: scale(0.96); }
     .game-card .emoji {
-      font-size: 2.4rem; width: 60px; height: 60px; display: grid; place-items: center;
-      background: var(--blue); border-radius: 18px; flex-shrink: 0;
+      font-size: 2.6rem; width: 72px; height: 72px;
+      display: grid; place-items: center; border-radius: 20px; background: var(--blue);
     }
     .game-card.c2 .emoji { background: var(--pink); }
     .game-card.c3 .emoji { background: var(--purple); }
     .game-card.c4 .emoji { background: var(--green); }
-    .game-card h2 { margin: 0 0 2px; font-size: 1.1rem; }
-    .game-card p { margin: 0; font-size: 0.82rem; opacity: 0.7; font-weight: 600; }
+    .game-card h2 { margin: 2px 0 0; font-size: 1rem; line-height: 1.1; }
+    .game-card p { margin: 0; font-size: 0.72rem; opacity: 0.7; font-weight: 600; line-height: 1.15; }
 
-    .footer-note { text-align: center; color: #fff; opacity: 0.85; font-size: 0.78rem; margin: 20px 0 14px; font-weight: 600; }
+    /* Tema: control secundario, compacto, debajo de los juegos */
+    .theme-row { display: flex; align-items: center; gap: 8px; margin: 18px 0 4px; }
+    .theme-row .tlabel { color: #fff; font-weight: 800; font-size: 0.85rem; flex-shrink: 0; text-shadow: 0 2px 0 rgba(0,0,0,0.15); }
+    .themebar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; -webkit-overflow-scrolling: touch; }
+    .themebar::-webkit-scrollbar { height: 0; }
+    .chip-t {
+      flex: 0 0 auto; background: rgba(255,255,255,0.85); border: none; border-radius: 999px;
+      padding: 7px 13px; font: inherit; font-weight: 800; font-size: 0.82rem; color: var(--ink);
+      box-shadow: var(--shadow); cursor: pointer; white-space: nowrap; touch-action: manipulation;
+    }
+    .chip-t.active { background: var(--yellow); }
+
+    .footer-note { text-align: center; color: #fff; opacity: 0.8; font-size: 0.72rem; margin: 14px 0 12px; font-weight: 600; }
   </style>
 </head>
 <body>
   <main class="app">
-    <header class="hero">
-      <h1 class="logo">🎈 JuegaPalabras</h1>
-      <p>¡Aprende jugando con emojis!</p>
-    </header>
-
-    <div class="mascota">
-      <div class="buho">🦉</div>
-      <div class="bubble" id="masc-msg">¡Hola!</div>
+    <div class="top">
+      <span class="logo">🎈 JuegaPalabras</span>
+      <span class="buho">🦉</span>
     </div>
+    <p class="greeting" id="masc-msg">¡Hola! ¿Jugamos?</p>
 
-    <a class="progress-strip" href="medallas.html">
-      <span class="lv-emoji" id="ps-emoji">🌱</span>
-      <span class="lv-info">
-        <span class="lv-top">
-          <span id="ps-name">Semillita</span>
-          <span class="lv-stars" id="ps-stars">⭐ 0</span>
-        </span>
-        <span class="bar"><span id="ps-bar" style="width:0%"></span></span>
-      </span>
-      <span class="chev">🏅</span>
-    </a>
-
-    <div class="quick-row">
-      <a class="quick" href="album.html">
-        <span class="q-emoji">📒</span>
-        <span class="q-text"><b id="album-count">0/0</b><small>Mi álbum</small></span>
+    <div class="statbar">
+      <a class="pill level" href="medallas.html">
+        <span class="pe" id="ps-emoji">🌱</span>
+        <span class="pt"><b id="ps-name">Semillita</b><small id="ps-stars">⭐ 0 · 🏅 medallas</small></span>
       </a>
-      <div class="quick">
-        <span class="q-emoji">🔥</span>
-        <span class="q-text"><b id="daily-streak">0 días</b><small>Racha diaria</small></span>
+      <a class="pill" href="album.html">
+        <span class="pe">📒</span>
+        <span class="pt"><b id="album-count">0/0</b><small>álbum</small></span>
+      </a>
+      <div class="pill">
+        <span class="pe">🔥</span>
+        <span class="pt"><b id="daily-streak">0</b><small>racha</small></span>
       </div>
     </div>
 
-    <div class="theme-label">Tema: <span id="theme-label">🌈 Todos</span></div>
-    <div class="themebar" id="themebar"></div>
-
+    <h2 class="section-title">🎮 Elegí un juego</h2>
     <nav class="games">
       <a class="game-card c1" href="games/word-guesser/index.html">
         <span class="emoji">🐶</span>
-        <span><h2>¡Adivina la Palabra!</h2><p>Mira el emoji y escribe la palabra</p></span>
+        <h2>Adivina la Palabra</h2>
+        <p>Escribe la palabra del emoji</p>
       </a>
       <a class="game-card c4" href="games/ordena/index.html">
         <span class="emoji">🔀</span>
-        <span><h2>Ordena las Letras</h2><p>Toca las letras en el orden correcto</p></span>
+        <h2>Ordena las Letras</h2>
+        <p>Pon las letras en orden</p>
       </a>
       <a class="game-card c3" href="games/letra-perdida/index.html">
         <span class="emoji">🎯</span>
-        <span><h2>Letra Perdida</h2><p>Completa la letra que falta</p></span>
+        <h2>Letra Perdida</h2>
+        <p>¿Qué letra falta?</p>
       </a>
       <a class="game-card c2" href="games/memoria/index.html">
         <span class="emoji">🔤</span>
-        <span><h2>Memoria de Palabras</h2><p>Encuentra cada emoji con su palabra</p></span>
+        <h2>Memoria</h2>
+        <p>Une emoji y palabra</p>
       </a>
     </nav>
+
+    <div class="theme-row">
+      <span class="tlabel" id="theme-label">🎨 Tema</span>
+    </div>
+    <div class="themebar" id="themebar"></div>
 
     <p class="footer-note">Hecho con 💜 para chicos curiosos</p>
   </main>
@@ -154,36 +138,26 @@
     Progress.load();
     const daily = Progress.touchDaily();
 
-    // Nivel
     const lv = Progress.level();
     document.getElementById("ps-emoji").textContent = lv.emoji;
     document.getElementById("ps-name").textContent = lv.name;
-    document.getElementById("ps-stars").textContent = "⭐ " + lv.stars;
-    document.getElementById("ps-bar").style.width = Math.round(lv.progress * 100) + "%";
+    document.getElementById("ps-stars").textContent = "⭐ " + lv.stars + " · 🏅";
 
-    // Álbum + racha diaria
     const got = Progress.wordCount();
     document.getElementById("album-count").textContent = got + "/" + WORDS.length;
     document.getElementById("daily-streak").textContent = daily.streak + (daily.streak === 1 ? " día" : " días");
 
-    // Mascota
+    // Mascota: mensajes cortos
     let msg;
-    if (got === 0) {
-      msg = "¡Hola! Soy Búho 🦉 ¿Jugamos a aprender palabras?";
-    } else if (daily.streak >= 2) {
-      msg = `¡${daily.streak} días seguidos! 🔥 ¡Sos imparable!`;
-    } else {
-      const opts = [
-        `¡Ya juntaste ${got} palabras! 🌟`,
-        "¿Seguimos aprendiendo? 📚",
-        "¡Elige un juego y a jugar! 🎉",
-        "¡Hoy es un gran día para aprender!",
-      ];
+    if (got === 0) msg = "¡Hola! Soy Búho. ¿Jugamos? 🦉";
+    else if (daily.streak >= 2) msg = `¡${daily.streak} días seguidos! 🔥`;
+    else {
+      const opts = [`¡Ya tenés ${got} palabras! 🌟`, "¿Seguimos aprendiendo? 📚", "¡Elegí un juego! 🎉"];
       msg = opts[Math.floor(Math.random() * opts.length)];
     }
     document.getElementById("masc-msg").textContent = msg;
 
-    // Selector de tema
+    // Tema (control secundario debajo de los juegos)
     const tb = document.getElementById("themebar");
     const items = [{ key: "all", emoji: "🌈", label: "Todos" }].concat(CATEGORIES);
     function renderChips() {
@@ -191,7 +165,7 @@
       tb.innerHTML = items.map((c) =>
         `<button class="chip-t ${c.key === cur ? "active" : ""}" data-k="${c.key}">${c.emoji} ${c.label}</button>`
       ).join("");
-      document.getElementById("theme-label").textContent = Theme.label();
+      document.getElementById("theme-label").textContent = "🎨 " + (cur === "all" ? "Tema" : CAT_MAP[cur].label);
       tb.querySelectorAll(".chip-t").forEach((b) =>
         b.addEventListener("click", () => { Theme.set(b.dataset.k); renderChips(); })
       );
