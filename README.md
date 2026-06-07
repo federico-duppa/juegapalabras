@@ -80,6 +80,19 @@ Para entender qué juegos y contenidos gustan más (y decidir dónde sumar conte
 El wrapper es agnóstico del proveedor (`js/analytics.js`); cambiar de servicio es tocar un
 solo adaptador.
 
+## Instalable (PWA) y compartir
+
+- **Instalable**: `manifest.json` + `sw.js` (service worker) + íconos hacen que se pueda
+  "Instalar app" en Android/Chrome y "Agregar a inicio" en iPhone, con su ícono y
+  pantalla completa. Funciona **offline** tras la primera carga (precache del app shell).
+  - ⚠️ En cada deploy hay que **subir `CACHE_VERSION` en `sw.js`** (junto con `APP_VERSION`)
+    para que los usuarios con la app instalada reciban la actualización.
+- **Previews al compartir**: cada página tiene Open Graph / Twitter Card, así el link
+  muestra una tarjeta linda (`og-image.png`) en WhatsApp/iMessage/etc.
+- **Íconos**: `favicon.png`, `apple-touch-icon.png`, `icons/icon-192.png`, `icons/icon-512.png`.
+  Se generan renderizando con headless Chrome (globo 🎈 sobre degradado); para regenerarlos,
+  ver el patrón en el historial (plantillas `_icon.html`/`_og.html` + screenshot por tamaño).
+
 ## Estructura
 
 ```
@@ -96,7 +109,10 @@ js/theme.js              → Tema elegido (categoría o "todos") + filtrado
 js/qwerty.js             → Layout QWERTY compartido
 js/idle.js               → Brillo de la pista por inactividad (+ señal "se trabó")
 js/analytics.js          → Wrapper de analítica anónima (Umami), provider-agnóstico
-js/analytics-config.js   → Config de analítica (website-id; vacío = desactivado)
+js/analytics-config.js   → Config de analítica + APP_VERSION (website-id; vacío = desactivado)
+manifest.json            → Manifest PWA (instalable, rutas relativas para el subpath)
+sw.js                    → Service worker (precache app shell; subir CACHE_VERSION por deploy)
+icons/ + *.png           → Íconos (192/512), apple-touch-icon, favicon, og-image (compartir)
 games/word-guesser/      → "¡Adivina la Palabra!"  (index.html, style.css, game.js)
 games/ordena/            → "Ordena las Letras"     (index.html, style.css, game.js)
 games/letra-perdida/     → "Letra Perdida"         (index.html, style.css, game.js)

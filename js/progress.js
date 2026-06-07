@@ -56,7 +56,7 @@ const Progress = (() => {
     return data;
   }
 
-  function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(data)); } catch (e) { /* storage no disponible (modo privado / webview) */ } }
 
   // Analítica segura (no rompe si Analytics no está cargado).
   function track(name, props) {

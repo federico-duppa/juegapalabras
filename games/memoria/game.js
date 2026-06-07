@@ -23,10 +23,14 @@ function tierInfo(t) {
   };
 }
 function getLevel() {
-  const n = parseInt(localStorage.getItem(LVL_KEY) || "0", 10) || 0;
-  return Math.max(0, Math.min(n, TIERS.length - 1));
+  try {
+    const n = parseInt(localStorage.getItem(LVL_KEY) || "0", 10) || 0;
+    return Math.max(0, Math.min(n, TIERS.length - 1));
+  } catch (e) { return 0; }
 }
-function setLevel(n) { localStorage.setItem(LVL_KEY, String(Math.max(0, Math.min(n, TIERS.length - 1)))); }
+function setLevel(n) {
+  try { localStorage.setItem(LVL_KEY, String(Math.max(0, Math.min(n, TIERS.length - 1)))); } catch (e) { /* storage no disponible */ }
+}
 
 function shuffle(a) {
   for (let i = a.length - 1; i > 0; i--) {
@@ -38,9 +42,11 @@ function shuffle(a) {
 
 // Palabras cortas del tema (fallback a todas si el tema tiene menos de 4).
 function memoriaPool() {
-  const themed = Theme.words().filter((x) => Array.from(x.w).length <= 7);
+  // Excluimos REGALO porque su emoji 🎁 chocaría con el cofre central.
+  const ok = (x) => Array.from(x.w).length <= 7 && x.w !== "REGALO";
+  const themed = Theme.words().filter(ok);
   if (themed.length >= 4) return themed;
-  return WORDS.filter((x) => Array.from(x.w).length <= 7);
+  return WORDS.filter(ok);
 }
 
 // Tier efectivo: el nivel deseado, bajado hasta que haya suficientes palabras.

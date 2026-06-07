@@ -4,10 +4,12 @@ const Theme = {
   KEY: "jp_theme",
 
   get() {
-    const t = localStorage.getItem(this.KEY) || "all";
-    return (t === "all" || CAT_MAP[t]) ? t : "all";
+    try {
+      const t = localStorage.getItem(this.KEY) || "all";
+      return (t === "all" || CAT_MAP[t]) ? t : "all";
+    } catch (e) { return "all"; }
   },
-  set(k) { localStorage.setItem(this.KEY, k); },
+  set(k) { try { localStorage.setItem(this.KEY, k); } catch (e) { /* storage no disponible */ } },
 
   // Palabras del tema actual (o todas si es "all").
   words() {

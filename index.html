@@ -4,6 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#6a4cff" />
+  <meta name="description" content="Juegos para que chicos de ~8 años mejoren vocabulario y ortografía en español, jugando con emojis." />
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="JuegaPalabras" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="JuegaPalabras 🎈" />
+  <meta property="og:description" content="Juegos para que chicos aprendan vocabulario y ortografía en español, jugando con emojis." />
+  <meta property="og:image" content="https://federico-duppa.github.io/juegapalabras/og-image.png" />
+  <meta property="og:url" content="https://federico-duppa.github.io/juegapalabras/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="JuegaPalabras 🎈" />
+  <meta name="twitter:description" content="Juegos para que chicos aprendan vocabulario y ortografía en español, jugando con emojis." />
+  <meta name="twitter:image" content="https://federico-duppa.github.io/juegapalabras/og-image.png" />
+  <script>if ("serviceWorker" in navigator) { addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {})); }</script>
   <title>JuegaPalabras 🎈</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
@@ -74,11 +92,12 @@
     .chip-t.active { background: var(--yellow); }
 
     .footer-heart { text-align: center; margin: 16px 0 14px; }
-    .privacy { margin-top: 8px; color: #fff; opacity: 0.72; font-size: 0.7rem; }
+    .foot-line { margin-top: 8px; display: flex; gap: 6px; justify-content: center; align-items: baseline; }
+    .privacy { color: #fff; opacity: 0.72; font-size: 0.7rem; }
     .privacy summary { cursor: pointer; font-weight: 700; list-style: none; }
     .privacy summary::-webkit-details-marker { display: none; }
-    .privacy p { max-width: 330px; margin: 6px auto 0; line-height: 1.35; font-weight: 600; }
-    .version { margin-top: 6px; color: #fff; opacity: 0.55; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.5px; }
+    .privacy p { max-width: 330px; margin: 6px auto 0; line-height: 1.35; font-weight: 600; text-align: center; }
+    .version { color: #fff; opacity: 0.55; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.5px; }
     .heart-btn {
       border: none; background: transparent; cursor: pointer;
       font-size: 1.8rem; line-height: 1; padding: 6px; border-radius: 50%;
@@ -149,12 +168,14 @@
 
     <div class="footer-heart">
       <button class="heart-btn" id="heart" aria-label="corazón">💜</button>
-      <details class="privacy">
-        <summary>Privacidad</summary>
-        <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
-           para saber qué juegos y categorías gustan más y mejorar el sitio.</p>
-      </details>
-      <div class="version" id="app-version"></div>
+      <div class="foot-line">
+        <details class="privacy">
+          <summary>Privacidad</summary>
+          <p>Usamos analítica <b>anónima y agregada</b> (sin cookies ni datos personales) solo
+             para saber qué juegos y categorías gustan más y mejorar el sitio.</p>
+        </details>
+        <span class="version" id="app-version"></span>
+      </div>
     </div>
   </main>
 
@@ -205,7 +226,7 @@
 
     // Versión visible (sutil) en el footer
     if (typeof APP_VERSION !== "undefined") {
-      document.getElementById("app-version").textContent = "v" + APP_VERSION;
+      document.getElementById("app-version").textContent = "· v" + APP_VERSION;
     }
 
     // Corazón del footer: ruidito tierno + rebote al tocarlo

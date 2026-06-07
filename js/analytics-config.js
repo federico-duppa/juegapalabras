@@ -1,6 +1,6 @@
 // Versión de la app (se muestra en el footer y se adjunta a los eventos de analítica).
 // Subila en cada release para correlacionar métricas entre versiones.
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.1.0";
 
 // Configuración de analítica (Umami Cloud). El website-id es público (va en el HTML
 // del sitio estático), no es un secreto. Para DESACTIVAR todo: dejá scriptUrl/siteId
