@@ -246,13 +246,18 @@
     if (typeof HEART_EMOJI !== "undefined") heart.textContent = HEART_EMOJI;
     if (typeof APP_VERSION !== "undefined") heart.title = "v" + APP_VERSION;
 
-    // ruidito tierno + rebote al tocarlo
+    // ruidito tierno + rebote al tocarlo. Además, como el corazón ES el indicador de
+    // versión, tocarlo busca la última versión publicada: si hay una nueva, el SW la
+    // activa y sw-register.js recarga solo a la última (si ya estás al día, no pasa nada).
     heart.addEventListener("click", () => {
       Sound.unlock();
       Sound.cute();
       heart.classList.remove("pop");
       void heart.offsetWidth; // reinicia la animación si se toca rápido
       heart.classList.add("pop");
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistration().then((r) => { if (r) r.update(); }).catch(() => {});
+      }
     });
 
     // Privacidad: popover centrado (no scrollea la página)
