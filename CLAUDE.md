@@ -49,15 +49,15 @@ The **menu/index page intentionally scrolls** (it's legitimately taller than one
 `sw.js` precaches the app shell (`PRECACHE` list) and serves **cache-first**, keyed on `CACHE_VERSION`. `js/sw-register.js` (shared by all 7 pages, resolves `sw.js` relative to itself so it works from any subfolder) registers with `updateViaCache:'none'`, calls `reg.update()` on `visibilitychange`, and **auto-reloads** the page when a new SW takes control (with a first-visit guard).
 
 On **every deploy you must bump, in lockstep:**
-1. `APP_VERSION` in `js/analytics-config.js` (attached to analytics events + shown in footer),
+1. `APP_VERSION` in `js/analytics-config.js` (shown in the footer heart tooltip),
 2. `CACHE_VERSION` in `sw.js` (busts the old cache so installed PWAs update),
 3. `HEART_EMOJI` in `js/analytics-config.js` — the footer heart **color** signals the published version at a glance (rotation 💜→💙→💚→💛→🧡→❤️→🤍→🖤→…).
 
 Convention: **minor bump = feature, patch = fix** (baseline 1.0.0). **Any new file served to users must be added to `PRECACHE` in `sw.js`** or it won't be cached/offline.
 
-## Analytics privacy invariants
+## Privacy: no data collection
 
-`js/analytics.js` is a provider-agnostic wrapper over Umami (config in `js/analytics-config.js`). Hard rules baked in: **never send PII or the individual word** — only the word's category via `Analytics.catOf(word)`. It's a total no-op unless configured and on the published `allowedHost` (so localhost never emits; `debug:true` logs to console instead of sending). Every event carries `APP_VERSION`. Disable everything by clearing `scriptUrl`/`siteId`.
+Analytics was **removed**. The site collects **nothing** — no analytics, cookies, accounts, PII, or third-party network calls; player progress lives only in `localStorage` (`jp_*`). `js/analytics.js` is now a **no-op** `Analytics` object (`init/track/pageview/catOf` do nothing, load nothing) kept so the remaining `Analytics.*` calls scattered across `game.js`/pages don't throw — don't re-add a real provider without revisiting the kids-app (COPPA/Families) implications. `js/analytics-config.js` keeps its name (to avoid touching every page's `<script>` tag) but now only holds `APP_VERSION` + `HEART_EMOJI`. Data Safety for Play = "no data collected".
 
 ## Content & deploy notes
 

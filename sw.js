@@ -1,7 +1,7 @@
 // Service worker de JuegaPalabras: precachea el "app shell" para que ande offline
 // y cargue rápido. La versión se bumpea en cada deploy (junto con APP_VERSION) para
 // purgar el caché viejo. Salta Umami y Google Fonts (necesitan red / fallan suave).
-const CACHE_VERSION = "1.11.0";
+const CACHE_VERSION = "1.11.1";
 const CACHE_NAME = "juegapalabras-" + CACHE_VERSION;
 
 const PRECACHE = [
@@ -36,8 +36,8 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET") return;
-  // Recursos externos (analítica / fuentes): a la red, sin cachear; si falla, no rompe.
-  if (req.url.includes("umami") || req.url.includes("gstatic") || req.url.includes("googleapis")) return;
+  // Recursos externos (Google Fonts): a la red, sin cachear; si falla, no rompe.
+  if (req.url.includes("gstatic") || req.url.includes("googleapis")) return;
   // Mismo origen: cache-first con relleno en segundo plano.
   e.respondWith(
     caches.match(req).then((cached) => {

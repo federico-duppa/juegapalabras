@@ -67,27 +67,17 @@ los juegos hacen fallback a todas.
 - **Continuar la partida**: cada juego guarda su sesión (`jp_sess_<juego>`). Si el
   chico sale y vuelve, retoma donde estaba (misma palabra, racha y tablero).
 
-## Privacidad y analítica
+## Privacidad
 
-Para entender qué juegos y contenidos gustan más (y decidir dónde sumar contenido) usamos
-**analítica anónima y agregada** con [Umami](https://umami.is) (cookieless, GDPR/CCPA).
+JuegaPalabras **no recopila ningún dato**: sin analítica, sin cookies, sin cuentas, sin
+datos personales y sin pedidos a servidores de terceros. El progreso del jugador se guarda
+**solo en el dispositivo** (`localStorage`, claves `jp_*`) y nunca se transmite.
 
-- **No** se recogen datos personales: ni nombres, ni edad, ni emails, ni texto libre, ni la
-  palabra individual que resuelve cada chico. Tampoco cookies de seguimiento ni fingerprint.
-- Solo se cuentan **eventos anónimos** con dimensiones acotadas: qué juego se abre, qué
-  categoría se resuelve, dificultad (uso de pista / errores / inactividad), retorno diario,
-  niveles y medallas. El progreso del jugador (`localStorage` `jp_*`) **nunca** se transmite.
-- Por defecto **trackea siempre** (los datos son anónimos, así que no es obligatorio
-  honrar Do Not Track). Para respetar **Do Not Track / GPC**, poné
-  `respectDoNotTrack: true` en `js/analytics-config.js`.
-- Cada evento incluye la **versión** de la app (`APP_VERSION` en `js/analytics-config.js`,
-  visible también en el footer) para comparar métricas entre versiones.
-- Solo emite desde el sitio publicado (`allowedHost`); en local queda en no-op.
-- **Para desactivar todo:** dejá `scriptUrl`/`siteId` vacíos en `js/analytics-config.js`
-  (con `debug: true` los eventos se muestran en consola y no se envían).
-
-El wrapper es agnóstico del proveedor (`js/analytics.js`); cambiar de servicio es tocar un
-solo adaptador.
+- La analítica (Umami) fue **eliminada**. `js/analytics.js` quedó como un no-op (no carga
+  nada ni envía nada) para no romper las llamadas existentes; `js/analytics-config.js` ya
+  solo guarda `APP_VERSION` y `HEART_EMOJI` (versión + color del corazón del footer).
+- Esto vale tanto para la **web** como para la futura **app** (Play): Data Safety = "no se
+  recopilan datos", lo que simplifica el cumplimiento para una app dirigida a niños.
 
 ## Instalable (PWA) y compartir
 
