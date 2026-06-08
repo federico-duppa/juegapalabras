@@ -35,8 +35,9 @@ Después abrí en el celular (misma red) o en el navegador:
 | 🔍 Encuentra el Error | ✅ Listo | Ortografía/fonética: la palabra tiene una letra mal (b/v, s/z/c, g/j…); toca la equivocada y se da vuelta mostrando la correcta |
 | 🖼️ ¿Cuál es? | ✅ Listo | Lectura/comprensión: lee la palabra y toca el dibujo correcto entre 4 emojis |
 
-**134 palabras en 12 categorías**: animales, comida, naturaleza, transporte, cuerpo,
-colores, ropa, casa, profesiones, deportes, instrumentos y cosas.
+**201 palabras en 12 categorías**: animales, comida, naturaleza, transporte, cuerpo,
+colores, ropa, casa, profesiones, deportes, instrumentos y cosas. (Animales y Comida son
+las más grandes, ~50 cada una.)
 
 ## Temas (elegir categoría)
 
