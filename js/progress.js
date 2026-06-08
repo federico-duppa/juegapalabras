@@ -30,6 +30,7 @@ const Progress = (() => {
     { id: "memoria",  emoji: "🧠", name: "Memorión",          desc: "Resuelve 20 en Memoria de Palabras",  cond: (d) => (d.byGame["memoria"] || 0) >= 20 },
     { id: "ordena",   emoji: "🔀", name: "Ordenapalabras",    desc: "Resuelve 20 en Ordena las Letras",    cond: (d) => (d.byGame["ordena"] || 0) >= 20 },
     { id: "detective", emoji: "🔍", name: "Detective",         desc: "Resuelve 20 en Encuentra el Error",   cond: (d) => (d.byGame["encuentra-error"] || 0) >= 20 },
+    { id: "reader",   emoji: "📖", name: "Lector(a)",         desc: "Resuelve 20 en ¿Cuál es?",            cond: (d) => (d.byGame["cual-es"] || 0) >= 20 },
     { id: "collect1", emoji: "📒", name: "Coleccionista",     desc: "Junta 30 palabras distintas",         cond: (d) => d.words.length >= 30 },
     { id: "collect2", emoji: "📚", name: "Bibliotecario",     desc: "Junta 70 palabras distintas",         cond: (d) => d.words.length >= 70 },
     { id: "daily3",   emoji: "📅", name: "Tres días",         desc: "Juega 3 días seguidos",               cond: (d) => d.daily.best >= 3 },

@@ -33,6 +33,7 @@ Después abrí en el celular (misma red) o en el navegador:
 | 🎯 Letra Perdida | ✅ Listo | Ortografía (elegir la letra que falta entre 4 opciones) |
 | 🔤 Memoria de Palabras | ✅ Listo | Lectura + asociación; tablero que crece 2×2→3×5, con 🎁 cofre sorpresa al centro |
 | 🔍 Encuentra el Error | ✅ Listo | Ortografía/fonética: la palabra tiene una letra mal (b/v, s/z/c, g/j…); toca la equivocada y se da vuelta mostrando la correcta |
+| 🖼️ ¿Cuál es? | ✅ Listo | Lectura/comprensión: lee la palabra y toca el dibujo correcto entre 4 emojis |
 
 **134 palabras en 12 categorías**: animales, comida, naturaleza, transporte, cuerpo,
 colores, ropa, casa, profesiones, deportes, instrumentos y cosas.

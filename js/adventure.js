@@ -12,7 +12,7 @@
 const Adventure = (() => {
   const KEY = "jp_adventure";       // "1" mientras está activa
   const POS = "jp_adventure_pos";   // índice actual dentro de SEQ
-  const SEQ = ["word-guesser", "letra-perdida", "ordena", "encuentra-error", "memoria"];
+  const SEQ = ["word-guesser", "letra-perdida", "ordena", "encuentra-error", "memoria", "cual-es"];
 
   function getPos() {
     try { return parseInt(localStorage.getItem(POS) || "0", 10) || 0; } catch (e) { return 0; }
