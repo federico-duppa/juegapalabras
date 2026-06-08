@@ -16,6 +16,7 @@ const CATEGORIES = [
   { key: "deportes",     label: "Deportes",     emoji: "⚽" },
   { key: "instrumentos", label: "Instrumentos", emoji: "🎵" },
   { key: "cosas",        label: "Cosas",        emoji: "🧸" },
+  { key: "fantasia",     label: "Fantasía",     emoji: "🧚" },
 ];
 const CAT_MAP = Object.fromEntries(CATEGORIES.map((c) => [c.key, c]));
 const CAT_LABEL = Object.fromEntries(CATEGORIES.map((c) => [c.key, c.emoji + " " + c.label]));
@@ -75,6 +76,24 @@ const WORDS = [
   { w: "HORMIGA", e: "🐜", c: "animales" },
   { w: "ERIZO", e: "🦔", c: "animales" },
   { w: "MAPACHE", e: "🦝", c: "animales" },
+  { w: "GUSANO", e: "🐛", c: "animales" },
+  { w: "GRILLO", e: "🦗", c: "animales" },
+  { w: "MOSQUITO", e: "🦟", c: "animales" },
+  { w: "ESCORPIÓN", e: "🦂", c: "animales" },
+  { w: "DRAGÓN", e: "🐉", c: "animales" },
+  { w: "CANGURO", e: "🦘", c: "animales" },
+  { w: "PEREZOSO", e: "🦥", c: "animales" },
+  { w: "NUTRIA", e: "🦦", c: "animales" },
+  { w: "FLAMENCO", e: "🦩", c: "animales" },
+  { w: "MURCIÉLAGO", e: "🦇", c: "animales" },
+  { w: "JABALÍ", e: "🐗", c: "animales" },
+  { w: "BÚFALO", e: "🐃", c: "animales" },
+  { w: "FOCA", e: "🦭", c: "animales" },
+  { w: "LANGOSTA", e: "🦞", c: "animales" },
+  { w: "CAMARÓN", e: "🦐", c: "animales" },
+  { w: "CALAMAR", e: "🦑", c: "animales" },
+  { w: "RINOCERONTE", e: "🦏", c: "animales" },
+  { w: "HIPOPÓTAMO", e: "🦛", c: "animales" },
 
   // —— Comida ——
   { w: "PAN", e: "🍞", c: "comida" },
@@ -127,6 +146,18 @@ const WORDS = [
   { w: "COCO", e: "🥥", c: "comida" },
   { w: "KIWI", e: "🥝", c: "comida" },
   { w: "MELÓN", e: "🍈", c: "comida" },
+  { w: "PANQUEQUE", e: "🥞", c: "comida" },
+  { w: "TOCINO", e: "🥓", c: "comida" },
+  { w: "CARNE", e: "🍖", c: "comida" },
+  { w: "PAELLA", e: "🥘", c: "comida" },
+  { w: "PALETA", e: "🍭", c: "comida" },
+  { w: "SAL", e: "🧂", c: "comida" },
+  { w: "MANÍ", e: "🥜", c: "comida" },
+  { w: "PIMIENTO", e: "🫑", c: "comida" },
+  { w: "ACEITUNA", e: "🫒", c: "comida" },
+  { w: "HIELO", e: "🧊", c: "comida" },
+  { w: "EMPANADA", e: "🥟", c: "comida" },
+  { w: "CASTAÑA", e: "🌰", c: "comida" },
 
   // —— Naturaleza ——
   { w: "SOL", e: "☀️", c: "naturaleza" },
@@ -157,6 +188,14 @@ const WORDS = [
   { w: "TULIPÁN", e: "🌷", c: "naturaleza" },
   { w: "ROSA", e: "🌹", c: "naturaleza" },
   { w: "GIRASOL", e: "🌻", c: "naturaleza" },
+  { w: "MARGARITA", e: "🌼", c: "naturaleza" },
+  { w: "GALAXIA", e: "🌌", c: "naturaleza" },
+  { w: "ROCA", e: "🪨", c: "naturaleza" },
+  { w: "AMANECER", e: "🌅", c: "naturaleza" },
+  { w: "NOCHE", e: "🌃", c: "naturaleza" },
+  { w: "NIEBLA", e: "🌫️", c: "naturaleza" },
+  { w: "VIENTO", e: "🌬️", c: "naturaleza" },
+  { w: "TRIGO", e: "🌾", c: "naturaleza" },
 
   // —— Transporte ——
   { w: "AUTO", e: "🚗", c: "transporte" },
@@ -180,6 +219,12 @@ const WORDS = [
   { w: "TRINEO", e: "🛷", c: "transporte" },
   { w: "BOTE", e: "🚤", c: "transporte" },
   { w: "ANCLA", e: "⚓", c: "transporte" },
+  { w: "PATRULLA", e: "🚓", c: "transporte" },
+  { w: "CAMIONETA", e: "🚙", c: "transporte" },
+  { w: "OVNI", e: "🛸", c: "transporte" },
+  { w: "CRUCERO", e: "🚢", c: "transporte" },
+  { w: "PATINES", e: "🛼", c: "transporte" },
+  { w: "PARACAÍDAS", e: "🪂", c: "transporte" },
 
   // —— Cuerpo ——
   { w: "MANO", e: "✋", c: "cuerpo" },
@@ -197,6 +242,8 @@ const WORDS = [
   { w: "CORAZÓN", e: "🫀", c: "cuerpo" },
   { w: "DEDO", e: "👆", c: "cuerpo" },
   { w: "PULMÓN", e: "🫁", c: "cuerpo" },
+  { w: "HUELLA", e: "👣", c: "cuerpo" },
+  { w: "SANGRE", e: "🩸", c: "cuerpo" },
 
   // —— Colores ——
   { w: "ROJO", e: "🔴", c: "colores" },
@@ -225,6 +272,10 @@ const WORDS = [
   { w: "ANILLO", e: "💍", c: "ropa" },
   { w: "CARTERA", e: "👜", c: "ropa" },
   { w: "BIKINI", e: "👙", c: "ropa" },
+  { w: "KIMONO", e: "👘", c: "ropa" },
+  { w: "SANDALIA", e: "👡", c: "ropa" },
+  { w: "CASCO", e: "⛑️", c: "ropa" },
+  { w: "MONEDERO", e: "👛", c: "ropa" },
 
   // —— Casa ——
   { w: "SILLA", e: "🪑", c: "casa" },
@@ -249,6 +300,11 @@ const WORDS = [
   { w: "JABÓN", e: "🧼", c: "casa" },
   { w: "ESPONJA", e: "🧽", c: "casa" },
   { w: "CANASTA", e: "🧺", c: "casa" },
+  { w: "CEPILLO", e: "🪥", c: "casa" },
+  { w: "ESPEJO", e: "🪞", c: "casa" },
+  { w: "BALDE", e: "🪣", c: "casa" },
+  { w: "ESCALERA", e: "🪜", c: "casa" },
+  { w: "ASCENSOR", e: "🛗", c: "casa" },
 
   // —— Profesiones ——
   { w: "POLICÍA", e: "👮", c: "profesiones" },
@@ -269,6 +325,9 @@ const WORDS = [
   { w: "NINJA", e: "🥷", c: "profesiones" },
   { w: "BAILARINA", e: "💃", c: "profesiones" },
   { w: "VAQUERO", e: "🤠", c: "profesiones" },
+  { w: "PROGRAMADOR", e: "🧑‍💻", c: "profesiones" },
+  { w: "OBRERO", e: "🧑‍🏭", c: "profesiones" },
+  { w: "GUARDIA", e: "💂", c: "profesiones" },
 
   // —— Deportes ——
   { w: "TENIS", e: "🎾", c: "deportes" },
@@ -289,6 +348,11 @@ const WORDS = [
   { w: "KARATE", e: "🥋", c: "deportes" },
   { w: "PESAS", e: "🏋️", c: "deportes" },
   { w: "AJEDREZ", e: "♟️", c: "deportes" },
+  { w: "PATINAJE", e: "⛸️", c: "deportes" },
+  { w: "BUCEO", e: "🤿", c: "deportes" },
+  { w: "GIMNASIA", e: "🤸", c: "deportes" },
+  { w: "ESCALADA", e: "🧗", c: "deportes" },
+  { w: "ESGRIMA", e: "🤺", c: "deportes" },
 
   // —— Instrumentos ——
   { w: "GUITARRA", e: "🎸", c: "instrumentos" },
@@ -302,6 +366,7 @@ const WORDS = [
   { w: "ACORDEÓN", e: "🪗", c: "instrumentos" },
   { w: "BANJO", e: "🪕", c: "instrumentos" },
   { w: "BONGÓ", e: "🪘", c: "instrumentos" },
+  { w: "CORNETA", e: "📯", c: "instrumentos" },
 
   // —— Cosas ——
   { w: "CASA", e: "🏠", c: "cosas" },
@@ -330,4 +395,33 @@ const WORDS = [
   { w: "DADO", e: "🎲", c: "cosas" },
   { w: "COMETA", e: "🪁", c: "cosas" },
   { w: "MALETA", e: "🧳", c: "cosas" },
+  { w: "COMPUTADORA", e: "💻", c: "cosas" },
+  { w: "PILA", e: "🔋", c: "cosas" },
+  { w: "ENCHUFE", e: "🔌", c: "cosas" },
+  { w: "MONEDA", e: "🪙", c: "cosas" },
+  { w: "CANDADO", e: "🔒", c: "cosas" },
+  { w: "DIAMANTE", e: "💎", c: "cosas" },
+  { w: "CONTROL", e: "🎮", c: "cosas" },
+  { w: "PIÑATA", e: "🪅", c: "cosas" },
+  { w: "MOÑO", e: "🎀", c: "cosas" },
+  { w: "TELESCOPIO", e: "🔭", c: "cosas" },
+  { w: "CAJA", e: "📦", c: "cosas" },
+  { w: "BALANZA", e: "⚖️", c: "cosas" },
+  { w: "LADRILLO", e: "🧱", c: "cosas" },
+  { w: "YOYÓ", e: "🪀", c: "cosas" },
+
+  // —— Fantasía ——
+  { w: "HADA", e: "🧚", c: "fantasia" },
+  { w: "SIRENA", e: "🧜", c: "fantasia" },
+  { w: "GENIO", e: "🧞", c: "fantasia" },
+  { w: "ELFO", e: "🧝", c: "fantasia" },
+  { w: "FANTASMA", e: "👻", c: "fantasia" },
+  { w: "VAMPIRO", e: "🧛", c: "fantasia" },
+  { w: "BRUJA", e: "🧙‍♀️", c: "fantasia" },
+  { w: "PAYASO", e: "🤡", c: "fantasia" },
+  { w: "ÁNGEL", e: "👼", c: "fantasia" },
+  { w: "OGRO", e: "👹", c: "fantasia" },
+  { w: "MONSTRUO", e: "👾", c: "fantasia" },
+  { w: "PRÍNCIPE", e: "🤴", c: "fantasia" },
+  { w: "PRINCESA", e: "👸", c: "fantasia" },
 ];
